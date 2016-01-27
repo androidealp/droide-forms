@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" version="3.1" client="site" method="upgrade">
+	<name>mod_droideforms</name>
+	<author>Rykrdo Lopes</author>
+	<creationDate>Novembro 2015</creationDate>
+	<copyright>Copyright (C) 2005 - 2015 Open Source Matters. All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<authorEmail>admin@joomla.org</authorEmail>
+	<authorUrl>www.next4.com.br</authorUrl>
+	<version>0.1</version>
+	<description>Formulário customizado - Permite envio SMTP</description>
+
+	<customContent />
+
+	<files>
+		<filename module="mod_droideforms">mod_droideforms.php</filename>
+		<folder>tmpl</folder>
+	</files>
+	<media folder="media" destination="mod_droideforms">
+		<folder>assets</folder>
+	</media>
+	
+	<config>
+		<fields name="params">
+			<fieldset name="options" label="COM_MODULES_BASIC_FIELDSET_LABEL">
+				<field
+					name="prepare_content"
+					type="radio"
+					class="btn-group btn-group-yesno"
+					label="MOD_CUSTOM_FIELD_PREPARE_CONTENT_LABEL"
+					description="MOD_CUSTOM_FIELD_PREPARE_CONTENT_DESC"
+					default="0">
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>
+			</fieldset>
+			<fieldset name="conf_mail" label="Configuração de Envio">
+				
+					<field 
+						name = "id_form"
+					    type = "text"
+					    default = ""
+					    label ="Id do formulário"
+					    description ="criar um id para o formulário caso não exista o sistema cria automaticamente"
+					     />
+
+
+					     <field name="filtros"
+			                  type="Repeatable"
+			                  icon="list"
+			                  description="Todas as validações serão inseridas aqui."
+			                  label="Criar validações"
+			                  default="">
+			                  <fields name="params">
+			                  <fieldset hidden="true" name="filtros_modal" repeat="true">
+			                    <field name="tipo" type="list" default="" label="Selecione o filtro" description="">
+								  <option value="f_required">Requirido</option>
+								  <option value="f_email">Validar E-mail</option>
+								</field>
+
+								<field 
+									name = "field_name"
+								    type = "text"
+								    default = ""
+								    label ="Nome do campo"
+								    description ="Nome descriminado no campo name"
+								/>
+			                    
+			                  </fieldset>
+			                  </fields>
+			                </field>
+					<field 
+						name = "email_de_cliente"
+					    type = "text"
+					    default = "email"
+					    label ="Field name email do cliente"
+					    description ="Name do campo de email do cliente geralmente é email"
+					     />
+
+					<field 
+						name = "nome_de_cliente"
+					    type = "text"
+					    default = "nome"
+					    label ="Field name nome do cliente"
+					    description ="Name do campo de que será o nome do cliente para indentificação no envio"
+					     />
+
+					     <field 
+						name = "assunto"
+					    type = "text"
+					    default = ""
+					    label ="Assunto"
+					    description ="Assunto do e-mail"
+					     />
+
+					<field 
+						name = "para"
+					    type = "text"
+					    default = ""
+					    label ="Email para"
+					    description ="Email quem receberá o envio"
+					     />
+
+					     <field 
+						name = "assunto"
+					    type = "text"
+					    default = ""
+					    label ="Assunto"
+					    description ="Assunto do e-mail"
+					     />
+
+				<field
+					name="layout_envio"
+					type="editor"
+					label="Layouts de envio"
+					width="900" 
+					filter="safehtml" />
+
+			</fieldset>
+			<fieldset
+				name="advanced">
+				<field
+					name="layout"
+					type="modulelayout"
+					label="JFIELD_ALT_LAYOUT_LABEL"
+					description="JFIELD_ALT_MODULE_LAYOUT_DESC" />
+
+				<field
+					name="moduleclass_sfx"
+					type="textarea" rows="3"
+					label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL"
+					description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC" />
+
+				<field
+					name="cache"
+					type="list"
+					default="1"
+					label="COM_MODULES_FIELD_CACHING_LABEL"
+					description="COM_MODULES_FIELD_CACHING_DESC">
+					<option
+						value="1">JGLOBAL_USE_GLOBAL</option>
+					<option
+						value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
+				</field>
+
+				<field
+					name="cache_time"
+					type="text"
+					default="900"
+					label="COM_MODULES_FIELD_CACHE_TIME_LABEL"
+					description="COM_MODULES_FIELD_CACHE_TIME_DESC" />
+				<field
+					name="cachemode"
+					type="hidden"
+					default="static">
+					<option
+						value="static"></option>
+				</field>
+			</fieldset>
+		</fields>
+	</config>
+</extension>
