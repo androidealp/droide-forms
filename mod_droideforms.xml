@@ -35,6 +35,19 @@
 				</field>
 			</fieldset>
 			<fieldset name="conf_mail" label="Configuração de Envio">
+
+				
+
+				<field
+					name="loadJquery"
+					type="radio"
+					class="btn-group btn-group-yesno"
+					label="Preparar jquery"
+					description="O JQUERY é obrigatório, caso não tenha no sistema ativeo"
+					default="0">
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>
 				
 					<field 
 						name = "id_form"

@@ -8,11 +8,40 @@
  */
 
 defined('_JEXEC') or die;
-//require_once __DIR__ . '/helper.php';
+require_once __DIR__ . '/helper.php';
 
 $doc = JFactory::getDocument();
 
-$doc->addScript(JUri::base() . 'media/mod_nextform/assets/enviar.js');
+//ler script php
+//$doc =& JDocument::getInstance( 'mytype' );
+//$renderer =& $doc->loadRenderer( 'myrenderer' );
+
+$doc->addScript(JUri::base() . 'media/mod_droideforms/assets/enviar.js');
+
+$loadJquery = $params->get('loadJquery', 1);
+
+$js = <<<JS
+(function ($) {
+	$(document).on('click', 'input[type=submit]', function () {
+		var value   = $('input[name=data]').val(),
+			request = {
+					'option' : 'com_ajax',
+					'module' : 'droideforms',
+					'droideform': value,
+					'format' : 'raw'
+				};
+		$.ajax({
+			type   : 'POST',
+			data   : request,
+			success: function (response) {
+				$('.status').html(response);
+			}
+		});
+		return false;
+	});
+})(jQuery)
+JS;
+$doc->addScriptDeclaration($js);
 
 if(!$params->get('id_form',0)){
 	$rand_id = 'form_'.rand(10,99999999);
@@ -30,4 +59,4 @@ if($validacao){
 }
 
 
-require JModuleHelper::getLayoutPath('mod_nextform', $params->get('layout', 'default'));
+require JModuleHelper::getLayoutPath('mod_droideforms', $params->get('layout', 'default'));
