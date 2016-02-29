@@ -1,24 +1,40 @@
 
 var sendNext = {
 	next_erro:[],
-	init: function(id_form, id_alert){
+	ob_form:'',
+	id_form:'',
+	init: function(id_form){
+
+			sendNext.ob_form = j(id_form);
+			sendNext.id_form = id_form;
 
 			j(id_form).submit(function(event){
 				event.preventDefault();
-				j(id_alert).show('hide');
-				$form 		= j(this);
-				$formdata 	= j(this).data('nextformvalid');
-				$action 	= $form.prop('action');
+				sendNext.next_erro = [];
+				$formdata 	= j(this).data('droidevalid');
+
 			//validate
 			j.each($formdata,function(index, el) {
+				//console.log(el);
+				mensagem = el['mensagem'];
+				condition = el['condition'];
+				//delete el['mensagem'];
 				validador = Object.keys(el).join(",");
+
+				validador = validador.replace(',mensagem','');
+
+				validador = validador.replace(',condition','');
 				//name do validader nome / email / teste
 				name = el[validador];
+				
+
 				//procurar nos campos
-				j.each($form.find('[name]'),function(index, el) {
-					var sear = j(el).prop('name').indexOf("["+name+"]");
-					if( sear != -1 ){
-						sendNext._validate(validador,j(el));
+				j.each(sendNext.ob_form.find('[name]'),function(index, el) {
+					//var sear = j(el).prop('name').indexOf("["+name+"]");
+					//console.log(j(el).prop('name')+' = '+name);
+
+					if( j(el).prop('name') == name ){
+						sendNext._validate(validador,j(el),mensagem,condition);
 					}
 				});
 				//fim do procurar por campos
@@ -26,38 +42,122 @@ var sendNext = {
 			//fim de procurar validacao
 
 			if(sendNext.next_erro.length != 0){
-
-				j(id_alert).removeClass('uk-alert-success');
-
-				j(id_alert).addClass('uk-alert-danger');
-				j(id_alert).html('<a href="" class="uk-alert-close uk-close"></a>'+sendNext.next_erro.join("<br />"));
-				j(id_alert).show('slow');
+				sendNext.alert('danger',sendNext.next_erro.join("<br />"));				
 				sendNext.next_erro = [];
+
 			}else{
 				
-				sendNext._ajax($action, $form,id_alert);
+				//sendNext._ajax($action, $form,id_alert);
+				sendNext._sendajax();
+				
 			}
 			
 			return false;
 		});
 	},
 
-	_validate:function(type, obj){
+	_validate:function(type, obj,mensagem,condition){
 
 		if(type == 'f_required'){
 
 			if(obj.val() == ''){
-				this.next_erro.push('O campo '+obj.prop('title')+' é obrigatório');
+				sendNext.next_erro.push(mensagem);
 			}
 		}
 
 		if(type == 'f_email'){
 			var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
 			if(obj.val() == '' || emailReg.test(obj.val()) == false){
-				this.next_erro.push('O campo de E-mail deve ser válido e é obrigatório');
+				sendNext.next_erro.push(mensagem);
 			}
 		}
 
+		if(type == 'f_integer'){
+
+			if(Math.floor(obj.val()) != obj.val() || j.isNumeric(obj.val()) != true){
+				
+				sendNext.next_erro.push(mensagem);	
+			}
+
+		}
+
+		if(type=='f_file'){
+			//add contiion
+
+			var file = obj.val();
+
+			var exts = condition.split(';');
+
+			if ( file ) {
+				var get_ext = file.split('.');
+				get_ext = get_ext.reverse();
+				if ( j.inArray( get_ext[0].toLowerCase(), exts) > -1 ){
+					console.log('permite '+get_ext[0].toLowerCase());
+				}else{
+					sendNext.next_erro.push(mensagem);
+					console.log('nao permite '+get_ext[0].toLowerCase());
+				}
+			}
+			
+		}
+
+
+		if(type=='f_size'){
+			//add condition
+
+			if(typeof obj[0].files[0] !== 'undefined'){
+
+				var file = obj[0].files[0].size;
+
+				kbps = (file/1024);
+
+				if(kbps>condition){
+					sendNext.next_erro.push(mensagem);
+						console.log('nao permite tamanho '+kbps);
+				}
+   
+			};
+
+			
+
+
+		}
+
+	},
+	alert:function(type, addtext){
+		//remove o ultimo alert
+		j(sendNext.id_form+'_alert').remove();
+		//imprime o alert
+		j(sendNext.id_form).prepend(
+			j('<div/>',{
+				    id: sendNext.id_form.replace('#', '')+'_alert',
+				    class:'alert alert-'+type,
+				    html: addtext
+				})
+			);
+	},
+	_sendajax:function(){
+
+		data_ext = sendNext.ob_form.data('extension');
+
+		var formdata   = JSON.stringify(sendNext.ob_form.serializeArray());
+			request = {
+					'option' : 'com_ajax',
+					'module' : 'droideforms',
+					'droideform': formdata,
+					'id_ext': data_ext,
+					'format' : 'json'
+				};
+		j.ajax({
+			type   : 'POST',
+			data   : request,
+			beforeSend:function(){
+				sendNext.alert('info','Aguarde o envio');
+			},
+			success: function (response) {
+				sendNext.alert('info',response);
+			}
+		});
 	},
 	_ajax:function(geturl, getdataform, id_alert){
 		formserialize = getdataform.serialize();

@@ -20,26 +20,21 @@ $doc->addScript(JUri::base() . 'media/mod_droideforms/assets/enviar.js');
 
 $loadJquery = $params->get('loadJquery', 1);
 
+$idmodule = md5($module->id);
+
+if($loadJquery){
+	$doc->addScript(JUri::base() . 'media/mod_droideforms/assets/jquery-1.12.0.min.js');	
+}
+$id_form = $params->get('id_form');
+
 $js = <<<JS
-(function ($) {
-	$(document).on('click', 'input[type=submit]', function () {
-		var value   = $('input[name=data]').val(),
-			request = {
-					'option' : 'com_ajax',
-					'module' : 'droideforms',
-					'droideform': value,
-					'format' : 'raw'
-				};
-		$.ajax({
-			type   : 'POST',
-			data   : request,
-			success: function (response) {
-				$('.status').html(response);
-			}
-		});
-		return false;
-	});
-})(jQuery)
+
+var j = jQuery.noConflict();
+
+j(document).ready(function(){
+   sendNext.init('#$id_form');
+});
+
 JS;
 $doc->addScriptDeclaration($js);
 
@@ -51,7 +46,7 @@ if(!$params->get('id_form',0)){
 $filtros = json_decode($params->get('filtros'));
 $validacao = array();
 foreach ($filtros->tipo as $k => $tipo) {
-	$validacao[] = array($tipo=>$filtros->field_name[$k]);
+	$validacao[] = array($tipo=>$filtros->field_name[$k],'condition'=>$filtros->field_condition[$k],'mensagem'=>$filtros->text_validador[$k]);
 }
 
 if($validacao){

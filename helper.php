@@ -15,8 +15,41 @@ class modDroideformsHelper
 {
 	public static function getAjax()
 	{
+
 		$input = JFactory::getApplication()->input;
-		$data  = $input->get('data');
-		return 'peguei os dados, ' . $data . '!';
+		// valor em array inforando name = campo, value=valor
+		$data  = $input->get('droideform');
+
+		$id_extension = $input->get('droideform',0,'INT');
+
+		$params = $this->getModule($id_extension);
+
+		//$validar = $this->validateField($data);
+		return 'peguei os dados, ' . print_r($params,true) . '!';
+	}
+
+	private function getModule($id){
+		jimport('joomla.application.module.helper');
+		$module = JModuleHelper::getModule('droideforms');
+		$params = new JRegistry();
+		if(is_array($module)){
+			foreach ($module as $k => $mod) {
+				if($mod->id == $id){
+						$params->loadString($mod->params);
+				}
+			}
+		}else{
+			$params->loadString($module->params);
+		}
+
+		return $params;
+		
+	}
+
+	private function validateField($data){
+		$filtros = json_decode($params->get('filtros'));
+
+		return $filtros;
+
 	}
 }
