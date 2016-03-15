@@ -14,22 +14,18 @@ defined('_JEXEC') or die;
 
 <?php echo $module->content;?>
 
-<form id="<?=$params->get('id_form');?>" class="form" method="POST" action="" data-droidevalid='<?=($validacao)?$validacao:''; ?>' >
+<form id="<?=$params->get('id_form');?>" class="form" method="POST" action="" data-extension="<?=$idmodule; ?>" data-droidevalid='<?=($validacao)?$validacao:''; ?>' >
 
 <div>
 	<input type="text" name="nome" />
 </div>
 
 <div>
-	<input type="text" name="idade" />
+	<input type="text" name="telefone" />
 </div>
 
 <div>
-	<input type="file" name="arquivo" />
-</div>
-
-<div>
-	<input type="file" name="imagem" />
+	<input type="text" name="assunto" />
 </div>
 
 <div>
@@ -38,5 +34,4 @@ defined('_JEXEC') or die;
 
 <button class="uk-button uk-button-large uk-margin-large-top">FAZER RESERVA</button>
 
-<input type="hidden" name="indetificador" value="<?=$idmodule;  ?>" />
 </form>

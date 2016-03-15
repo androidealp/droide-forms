@@ -20,10 +20,12 @@ $doc->addScript(JUri::base() . 'media/mod_droideforms/assets/enviar.js');
 
 $loadJquery = $params->get('loadJquery', 1);
 
-$idmodule = md5($module->id);
+$helper = new modDroideformsHelper();
+
+$idmodule = $helper->Encrypt($module->id);
 
 if($loadJquery){
-	$doc->addScript(JUri::base() . 'media/mod_droideforms/assets/jquery-1.12.0.min.js');	
+	$doc->addScript(JUri::base() . 'media/mod_droideforms/assets/jquery-1.12.0.min.js');
 }
 $id_form = $params->get('id_form');
 
@@ -50,7 +52,7 @@ foreach ($filtros->tipo as $k => $tipo) {
 }
 
 if($validacao){
- $validacao= json_encode($validacao);	
+ $validacao= json_encode($validacao);
 }
 
 
