@@ -32,6 +32,6 @@ defined('_JEXEC') or die;
 	<textarea name="mensagem"></textarea>
 </div>
 
-<button class="uk-button uk-button-large uk-margin-large-top">FAZER RESERVA</button>
+<button class="uk-button uk-button-large uk-margin-large-top">Enviar</button>
 
 </form>

@@ -140,7 +140,8 @@ var sendNext = {
 
 		data_ext = sendNext.ob_form.data('extension');
 
-		var formdata   = JSON.stringify(sendNext.ob_form.serializeArray());
+		//var formdata   = JSON.stringify(sendNext.ob_form.serializeArray());
+		var formdata   = sendNext.ob_form.serializeArray();
 			request = {
 					'option' : 'com_ajax',
 					'module' : 'droideforms',
@@ -155,44 +156,9 @@ var sendNext = {
 				sendNext.alert('info','Aguarde o envio');
 			},
 			success: function (response) {
-				sendNext.alert('info',response);
+				sendNext.alert('info',response.data);
 			}
 		});
-	},
-	_ajax:function(geturl, getdataform, id_alert){
-		formserialize = getdataform.serialize();
-		j.ajax({
-				url: geturl,
-				data: formserialize,
-				type: "POST",
-				beforeSend: function(){
-					j(id_alert).removeClass('uk-alert-danger');
-					j(id_alert).removeClass('uk-alert-success');
-					j(id_alert).addClass('uk-alert').html('Aguarde um momento estamos enviado seu email...').fadeIn(1000);
-				},
-			  	success: function(response) {
-			  		console.log( response );
-			  		 response = JSON.parse(response);
-			  	
-					if(response.erro) {
-						
-						j(id_alert).removeClass('uk-alert-success');
-
-
-						j(id_alert).addClass('uk-alert-danger').html(response.msn).fadeIn(1000);
-						
-					} else {
-
-						j.each(getdataform.find('[name]'),function(index, el) {
-							j(el).val('');
-						});
-
-						j(id_alert).removeClass('uk-alert-danger');
-						j(id_alert).addClass('uk-alert-success').html(response.msn).fadeIn(1000); 
-					}
-			  	}
-			});	
-
 	}
 
 

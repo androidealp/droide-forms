@@ -15,8 +15,8 @@ defined('_JEXEC') or die;
  */
 class modDroideformsHelper
 {
-	private $pass_cript_decript = 'droideFomrs@@_645A';
-	public $errors = array();
+	private static $pass_cript_decript = 'droideFomrs@@_645A';
+	public static $errors = array();
 
 	/**
 	 * Pega o ajax
@@ -25,18 +25,16 @@ class modDroideformsHelper
 	{
 
 		$input = JFactory::getApplication()->input;
-		// valor em array inforando name = campo, value=valor
-		$data  = $input->get('droideform');
+		$id_extension  = $input->get('id_ext',0,'STRING');
+		$post = $input->post->get('droideform',0,'ARRAY');
+		$params = self::getModule($id_extension);
 
-		$id_extension = $input->get('droideform',0,'STRING');
-		$post = $app->input->post->get('droideform');
-		$params = $this->getModule($id_extension);
 
-		if($this->validateField($params,$post)){
-				return 'validado';
+		if(self::validateField($params,$post)){
+				return  'validado';
 		}else{
-				return 'Erro localizado ' . implode('<br />',$this->errors).'!';
-		}
+				return  'Erro localizado <pre>' . print_r(self::$errors,true).'</pre>!';
+		} 
 
 	}
 	/**
@@ -44,7 +42,7 @@ class modDroideformsHelper
 	 * @param int $id id do modulo
 	 */
 	private function getModule($id){
-		$id = $this->Decrypt($id);
+		$id = self::Decrypt($id);
 		jimport('joomla.application.module.helper');
 		$module = JModuleHelper::getModule('droideforms');
 		$params = new JRegistry();
@@ -67,34 +65,88 @@ class modDroideformsHelper
 	 * @return bolean true false
 	 */
 	private function validateField($data,$post){
-		$validFiltros = json_decode($data->get('filtros'));
-		$validator = array();
-		$return = true;
-		$erros = array();
-		$validador = $validFiltros;
-		// foreach ($validFiltros->field_name as $k => $name) {
-		// 	$validator[$name] =array(
-		// 		'condition'=>$validFiltros->field_condition[$k],
-		// 		'type'=>$validFiltros->tipo[$k],
-		// 		'field_name'=>$validFiltros->field_name[$k],
-		// 	);
-		// }
-/*
-		foreach ($validator as $name => $tipo) {
-			if(array_key_exists($name, $post)){
-				$erro = $this->__detectValidate($tipo,$post[$name]);
-				if($erro){
-					$erros[] = $erro;
-					$return = false;
-				}
-			}
-		}*/
+		$validFiltros = json_decode($data->get('filtros'),true);
 
-		$this->__erros = $validator;
+		$return = true;
+		$tratamento = array();
+		$org_Errors = array();
+		//organizo os erros listados no adm e organizando em uma lista com o indice do field name
+		foreach ($validFiltros['field_name'] as $k => $fild_name) {
+			$org_Errors[$fild_name] = array(
+					'tipo'=>$validFiltros['tipo'][$k],
+					'condition'=>$validFiltros['field_condition'][$k],
+					'msn'=>$validFiltros['text_validador'][$k]
+				);
+		}
+
+		foreach ($post as $index => $attr) {
+			if(isset($org_Errors[$attr['name']])){
+				self::__validate($attr,$org_Errors[$attr['name']]);
+			}
+		}
+
+		
+
+		self::$errors = $post;
 
 		return false;
 
 	}
+
+	private __validate($attr_post, $validate){
+
+		if($validate['tipo'] == 'f_required' ){
+			self::_required($attr_post['value'], $validate['msn']);
+		}
+
+		if($validate['tipo'] == 'f_email' ){
+			self::__checkEmail($attr_post['value'], $validate['msn']);
+		}
+
+		if($validate['tipo'] == 'f_integer' && !is_int($attr_post['value'])){
+			self::$errors[] = $validate['msn'];
+		}
+
+		if($validate['tipo'] == 'f_file'){
+			self::__file($attr_post['value'], $validate);
+		}
+
+		if($validate['tipo'] == 'f_size'){
+			self::__size($attr_post['value'], $validate);	
+		}
+
+	}
+
+	private function _required($valor, $msn){
+		if(empty($valor)){
+			self::$errors[] = $msn;
+		}
+	}
+
+	private function __checkEmail($valor, $msn){
+		if(empty($valor) ||  !filter_var($valor, FILTER_VALIDATE_EMAIL)){
+			self::$errors[] = $msn;
+		}
+	}
+
+	private function __file($valor, $attr){
+		$ext = JFile::getExt($valor);
+		$condition = explode(';',$attr['condition']);
+		if(!in_array($ext, $condition)){
+			self::$errors[] = $attr['msn'];
+		}
+	}
+
+	private function __size($valor, $attr){
+		$size = $attr['condition'] / 1024;
+		if($valor['size'] > $size){
+			self::$errors[] = $attr['msn'];	
+		}
+	}
+
+
+
+
 	/**
 	 * Enviar post
 	 */
@@ -132,7 +184,7 @@ class modDroideformsHelper
 			try {
 				$sent = $mail->Send();
 			} catch (Exception $e) {
-				$this->__erros[] = $e;
+				$this->errors[] = $e;
 			}
 
 
@@ -146,9 +198,9 @@ class modDroideformsHelper
  * @param int $data id para criptar
  * @return string criptada
  */
-private function Encrypt($data)
+public function Encrypt($data)
 {
-	$password = $this->pass_cript_decript;
+	$password = self::$pass_cript_decript;
     $salt = substr(md5(mt_rand(), true), 8);
 
     $key = md5($password . $salt, true);
@@ -164,9 +216,9 @@ private function Encrypt($data)
  * @param int $data id para decriptar
  * @return string decriptada
  */
-function Decrypt($data)
+private function Decrypt($data)
 {
-		$password = $this->pass_cript_decript;
+		$password = self::$pass_cript_decript;
 
     $data = base64_decode($data);
     $salt = substr($data, 8, 8);
