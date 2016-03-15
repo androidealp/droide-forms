@@ -78,21 +78,25 @@ class modDroideformsHelper
 					'msn'=>$validFiltros['text_validador'][$k]
 				);
 		}
-
+		// verico se nos campos de validação existe post, se sim aplico a validação
 		foreach ($post as $index => $attr) {
 			if(isset($org_Errors[$attr['name']])){
 				self::__validate($attr,$org_Errors[$attr['name']]);
 			}
 		}
 
+		//verifico se existe erros na validação
+		
+		if(count(self::$errors)){
+			$return = false;
+		}
 		
 
-		self::$errors = $post;
-
-		return false;
+		return $return;
 
 	}
-
+    
+    //aplico as validacoes de acordo com o tipo
 	private __validate($attr_post, $validate){
 
 		if($validate['tipo'] == 'f_required' ){
@@ -117,18 +121,36 @@ class modDroideformsHelper
 
 	}
 
+	/**
+	 * Verico se o campo é requirido
+	 * @param  [type] $valor [description]
+	 * @param  [type] $msn   [description]
+	 * @return [type]        [description]
+	 */
 	private function _required($valor, $msn){
 		if(empty($valor)){
 			self::$errors[] = $msn;
 		}
 	}
 
+	/**
+	 * Verifico se o email é valido
+	 * @param  [type] $valor [description]
+	 * @param  [type] $msn   [description]
+	 * @return [type]        [description]
+	 */
 	private function __checkEmail($valor, $msn){
 		if(empty($valor) ||  !filter_var($valor, FILTER_VALIDATE_EMAIL)){
 			self::$errors[] = $msn;
 		}
 	}
 
+	/**
+	 * Verifco se a extensao do file é valido
+	 * @param  [type] $valor [description]
+	 * @param  [type] $attr  [description]
+	 * @return [type]        [description]
+	 */
 	private function __file($valor, $attr){
 		$ext = JFile::getExt($valor);
 		$condition = explode(';',$attr['condition']);
@@ -137,6 +159,12 @@ class modDroideformsHelper
 		}
 	}
 
+	/**
+	 * Verifico se o tamanho do file é valido 
+	 * @param  [type] $valor [description]
+	 * @param  [type] $attr  [description]
+	 * @return [type]        [description]
+	 */
 	private function __size($valor, $attr){
 		$size = $attr['condition'] / 1024;
 		if($valor['size'] > $size){
