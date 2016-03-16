@@ -1,16 +1,23 @@
 
-var sendNext = {
+var sendDroideForms = {
 	next_erro:[],
 	ob_form:'',
 	id_form:'',
+	alert_class:'alert alert-',
+	tipe_erros_class:{
+		danger:'danger',
+		warning:'warning',
+		info:'info',
+		success:'success'
+	},
 	init: function(id_form){
 
-			sendNext.ob_form = j(id_form);
-			sendNext.id_form = id_form;
+			sendDroideForms.ob_form = j(id_form);
+			sendDroideForms.id_form = id_form;
 
 			j(id_form).submit(function(event){
 				event.preventDefault();
-				sendNext.next_erro = [];
+				sendDroideForms.next_erro = [];
 				$formdata 	= j(this).data('droidevalid');
 
 			//validate
@@ -29,28 +36,28 @@ var sendNext = {
 				
 
 				//procurar nos campos
-				j.each(sendNext.ob_form.find('[name]'),function(index, el) {
+				j.each(sendDroideForms.ob_form.find('[name]'),function(index, el) {
 					//var sear = j(el).prop('name').indexOf("["+name+"]");
 					//console.log(j(el).prop('name')+' = '+name);
 
 					if( j(el).prop('name') == name ){
-						sendNext._validate(validador,j(el),mensagem,condition);
+						sendDroideForms._validate(validador,j(el),mensagem,condition);
 					}
 				});
 				//fim do procurar por campos
 			});
 			//fim de procurar validacao
 
-			if(sendNext.next_erro.length != 0){
-				sendNext.alert('danger',sendNext.next_erro.join("<br />"));				
-				sendNext.next_erro = [];
+			if(sendDroideForms.next_erro.length != 0){
+				sendDroideForms.alert('danger',sendDroideForms.next_erro.join("<br />"));				
+				sendDroideForms.next_erro = [];
 
-			}else{
+			 }else{
 				
-				//sendNext._ajax($action, $form,id_alert);
-				sendNext._sendajax();
+
+				sendDroideForms._sendajax();
 				
-			}
+			 }
 			
 			return false;
 		});
@@ -61,14 +68,14 @@ var sendNext = {
 		if(type == 'f_required'){
 
 			if(obj.val() == ''){
-				sendNext.next_erro.push(mensagem);
+				sendDroideForms.next_erro.push(mensagem);
 			}
 		}
 
 		if(type == 'f_email'){
 			var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
 			if(obj.val() == '' || emailReg.test(obj.val()) == false){
-				sendNext.next_erro.push(mensagem);
+				sendDroideForms.next_erro.push(mensagem);
 			}
 		}
 
@@ -76,7 +83,7 @@ var sendNext = {
 
 			if(Math.floor(obj.val()) != obj.val() || j.isNumeric(obj.val()) != true){
 				
-				sendNext.next_erro.push(mensagem);	
+				sendDroideForms.next_erro.push(mensagem);	
 			}
 
 		}
@@ -94,7 +101,7 @@ var sendNext = {
 				if ( j.inArray( get_ext[0].toLowerCase(), exts) > -1 ){
 					console.log('permite '+get_ext[0].toLowerCase());
 				}else{
-					sendNext.next_erro.push(mensagem);
+					sendDroideForms.next_erro.push(mensagem);
 					console.log('nao permite '+get_ext[0].toLowerCase());
 				}
 			}
@@ -112,7 +119,7 @@ var sendNext = {
 				kbps = (file/1024);
 
 				if(kbps>condition){
-					sendNext.next_erro.push(mensagem);
+					sendDroideForms.next_erro.push(mensagem);
 						console.log('nao permite tamanho '+kbps);
 				}
    
@@ -126,22 +133,25 @@ var sendNext = {
 	},
 	alert:function(type, addtext){
 		//remove o ultimo alert
-		j(sendNext.id_form+'_alert').remove();
+		j(sendDroideForms.id_form+'_alert').remove();
 		//imprime o alert
-		j(sendNext.id_form).prepend(
+		j(sendDroideForms.id_form).prepend(
 			j('<div/>',{
-				    id: sendNext.id_form.replace('#', '')+'_alert',
-				    class:'alert alert-'+type,
+				    id: sendDroideForms.id_form.replace('#', '')+'_alert',
+				    class:sendDroideForms.alert_class+type,
 				    html: addtext
 				})
 			);
 	},
+	divLoad:function(){
+		return "<img src='../media/mod_droideforms/assets/ajax-loader.gif' /> Load...";
+	},
 	_sendajax:function(){
 
-		data_ext = sendNext.ob_form.data('extension');
+		data_ext = sendDroideForms.ob_form.data('extension');
 
-		//var formdata   = JSON.stringify(sendNext.ob_form.serializeArray());
-		var formdata   = sendNext.ob_form.serializeArray();
+		//var formdata   = JSON.stringify(sendDroideForms.ob_form.serializeArray());
+		var formdata   = sendDroideForms.ob_form.serializeArray();
 			request = {
 					'option' : 'com_ajax',
 					'module' : 'droideforms',
@@ -153,10 +163,17 @@ var sendNext = {
 			type   : 'POST',
 			data   : request,
 			beforeSend:function(){
-				sendNext.alert('info','Aguarde o envio');
+				sendDroideForms.alert(sendDroideForms.tipe_erros_class.info,sendDroideForms.divLoad());
 			},
 			success: function (response) {
-				sendNext.alert('info',response.data);
+				dados = jQuery.parseJSON( response.data );
+
+				if(dados.error){
+					sendDroideForms.alert(sendDroideForms.tipe_erros_class.danger,dados.msn);	
+				}else{
+					sendDroideForms.alert(sendDroideForms.tipe_erros_class.success,dados.msn);	
+				}
+				
 			}
 		});
 	}
@@ -165,49 +182,3 @@ var sendNext = {
 
 }
 
-
-
-
-/*
-		var send = function() {
-			
-			$.ajax({
-				url: 'acoes/contato.php',
-				data: 'contato=' + JSON.stringify($formData),
-				type: "POST",
-				beforeSend: function(){
-
-					if($('#dbdContactResponse').hasClass('alert-error')){
-						$('#dbdContactResponse').removeClass('alert-error');
-					}
-
-					$('#dbdContactResponse').addClass('alert-success').html('Aguarde um momento estamos enviado seu email...').fadeIn(1000);
-				},
-			  	success: function(response) {
-
-			  		 response = JSON.parse(response);
-			  	
-					if(response.erro) {
-						
-						if($('#dbdContactResponse').hasClass('alert-success')){
-							$('#dbdContactResponse').removeClass('alert-success');
-						}
-
-						$('#dbdContactResponse').addClass('alert-error').html(response.status).fadeIn(1000);
-						
-					} else {
-
-						if($('#dbdContactResponse').hasClass('alert-error')){
-							$('#dbdContactResponse').removeClass('alert-error');
-						}
-
-						$mainElement.fadeOut(1000, function() {
-							$('#dbdContactResponse').addClass('alert-success').html(response.status).fadeIn(1000);
-						});
-						 
-					}
-			  	}
-			});	
-		}
-
-		*/

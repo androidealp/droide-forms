@@ -31,9 +31,16 @@ class modDroideformsHelper
 
 
 		if(self::validateField($params,$post)){
-				return  'validado';
+
+				return  self::_sendEmail($params, $post);
 		}else{
-				return  'Erro localizado <pre>' . print_r(self::$errors,true).'</pre>!';
+
+			$error = array(
+				'error'=>1,
+				'msn'=>self::$errors
+				);
+
+			return  json_encode($error);
 		} 
 
 	}
@@ -97,7 +104,7 @@ class modDroideformsHelper
 	}
     
     //aplico as validacoes de acordo com o tipo
-	private __validate($attr_post, $validate){
+	private function __validate($attr_post, $validate){
 
 		if($validate['tipo'] == 'f_required' ){
 			self::_required($attr_post['value'], $validate['msn']);
@@ -107,8 +114,8 @@ class modDroideformsHelper
 			self::__checkEmail($attr_post['value'], $validate['msn']);
 		}
 
-		if($validate['tipo'] == 'f_integer' && !is_int($attr_post['value'])){
-			self::$errors[] = $validate['msn'];
+		if($validate['tipo'] == 'f_integer'){
+			self::_interger($attr_post['value'], $validate['msn']);
 		}
 
 		if($validate['tipo'] == 'f_file'){
@@ -119,6 +126,17 @@ class modDroideformsHelper
 			self::__size($attr_post['value'], $validate);	
 		}
 
+	}
+
+	private function _interger($valor, $msn){
+		$filter_options = array( 
+		    'options' => array( 'min_range' => 0) 
+		);
+		$validatedValue = filter_var($valor, FILTER_VALIDATE_INT, $filter_options);
+
+		if($validatedValue === FALSE){
+			self::$errors[] = $msn;
+		}
 	}
 
 	/**
@@ -176,25 +194,37 @@ class modDroideformsHelper
 
 
 	/**
-	 * Enviar post
+	 * Envio de e-mail 
+	 * @param  object $module Objeto com o conteúdo do módulo
+	 * @param  array $post   post do formulário
+	 * @return string         mensagem de sucesso ou de erro
 	 */
 	private function _sendEmail($module, $post){
 			$config = JFactory::getConfig();
+			$return = '';
+			$frommail = "";
+			$fromname = "";
+			$layout = $module->get('layout_envio');
 
-			$frommail = $post[$module->get('email_de_cliente')];
-			$fromname = $post[$module->get('nome_de_cliente')];
+			foreach ($post as $k => $field) {
+
+				if($field['name'] = $module->get('nome_de_cliente')){
+					$fromname = $field['value'];
+				}
+
+				if($field['name'] = $module->get('email_de_cliente')){
+					$fromname = $field['value'];
+				}
+
+				if(strrpos($layout, '{'.$field['name'].'}')){
+					$layout = str_replace('{'.$field['name'].'}', $field, $layout);
+				}
+			}
+
 			$sender = array(
 			   $frommail,
 			   $fromname
 			);
-
-			$layout = $module->get('layout_envio');
-
-			foreach ($post as $k => $field) {
-				if(strrpos($layout, '{'.$k.'}')){
-					$layout = str_replace('{'.$k.'}', $field, $layout);
-				}
-			}
 
 			$emailTO = $config->get( 'mailfrom' );
 			$mailmodulepara = $module->get('para');
@@ -209,15 +239,25 @@ class modDroideformsHelper
 			$mail->setSender($sender);
 			$mail->setSubject($module->get('assunto'));
 			$mail->setBody($layout);
-			try {
-				$sent = $mail->Send();
-			} catch (Exception $e) {
-				$this->errors[] = $e;
+			if($mail->Send()){
+				$sucesso = array(
+				'error'=>0,
+				'msn'=>$mod->get('resp_sucesso',JText::_('MOD_DROIDEFORMS_RESP_SUCESSO_DEFAULT'))
+				);
+				$return = json_encode($sucesso);
+			}else{
+
+				self::$errors[] = JText::_('MOD_DROIDEFORMS_RESP_ERROR_DEFAULT');
+
+				$error = array(
+					'error'=>1,
+					'msn'=>self::$errors
+				);
+
+				$return = json_encode($error);
 			}
 
-
-
-			return $sent;
+			return $return;
 	}
 
 

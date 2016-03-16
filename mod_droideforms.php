@@ -34,7 +34,7 @@ $js = <<<JS
 var j = jQuery.noConflict();
 
 j(document).ready(function(){
-   sendNext.init('#$id_form');
+   sendDroideForms.init('#$id_form');
 });
 
 JS;
