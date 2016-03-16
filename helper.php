@@ -41,7 +41,7 @@ class modDroideformsHelper
 				);
 
 			return  json_encode($error);
-		} 
+		}
 
 	}
 	/**
@@ -93,16 +93,16 @@ class modDroideformsHelper
 		}
 
 		//verifico se existe erros na validação
-		
+
 		if(count(self::$errors)){
 			$return = false;
 		}
-		
+
 
 		return $return;
 
 	}
-    
+
     //aplico as validacoes de acordo com o tipo
 	private function __validate($attr_post, $validate){
 
@@ -123,14 +123,14 @@ class modDroideformsHelper
 		}
 
 		if($validate['tipo'] == 'f_size'){
-			self::__size($attr_post['value'], $validate);	
+			self::__size($attr_post['value'], $validate);
 		}
 
 	}
 
 	private function _interger($valor, $msn){
-		$filter_options = array( 
-		    'options' => array( 'min_range' => 0) 
+		$filter_options = array(
+		    'options' => array( 'min_range' => 0)
 		);
 		$validatedValue = filter_var($valor, FILTER_VALIDATE_INT, $filter_options);
 
@@ -178,7 +178,7 @@ class modDroideformsHelper
 	}
 
 	/**
-	 * Verifico se o tamanho do file é valido 
+	 * Verifico se o tamanho do file é valido
 	 * @param  [type] $valor [description]
 	 * @param  [type] $attr  [description]
 	 * @return [type]        [description]
@@ -186,7 +186,7 @@ class modDroideformsHelper
 	private function __size($valor, $attr){
 		$size = $attr['condition'] / 1024;
 		if($valor['size'] > $size){
-			self::$errors[] = $attr['msn'];	
+			self::$errors[] = $attr['msn'];
 		}
 	}
 
@@ -194,7 +194,7 @@ class modDroideformsHelper
 
 
 	/**
-	 * Envio de e-mail 
+	 * Envio de e-mail
 	 * @param  object $module Objeto com o conteúdo do módulo
 	 * @param  array $post   post do formulário
 	 * @return string         mensagem de sucesso ou de erro
@@ -213,11 +213,11 @@ class modDroideformsHelper
 				}
 
 				if($field['name'] = $module->get('email_de_cliente')){
-					$fromname = $field['value'];
+					$frommail = $field['value'];
 				}
 
 				if(strrpos($layout, '{'.$field['name'].'}')){
-					$layout = str_replace('{'.$field['name'].'}', $field, $layout);
+					$layout = str_replace('{'.$field['name'].'}', $field['value'], $layout);
 				}
 			}
 
@@ -242,7 +242,7 @@ class modDroideformsHelper
 			if($mail->Send()){
 				$sucesso = array(
 				'error'=>0,
-				'msn'=>$mod->get('resp_sucesso',JText::_('MOD_DROIDEFORMS_RESP_SUCESSO_DEFAULT'))
+				'msn'=>$module->get('resp_sucesso',JText::_('MOD_DROIDEFORMS_RESP_SUCESSO_DEFAULT'))
 				);
 				$return = json_encode($sucesso);
 			}else{
