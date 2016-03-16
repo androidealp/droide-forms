@@ -33,7 +33,7 @@ var sendDroideForms = {
 				validador = validador.replace(',condition','');
 				//name do validader nome / email / teste
 				name = el[validador];
-				
+
 
 				//procurar nos campos
 				j.each(sendDroideForms.ob_form.find('[name]'),function(index, el) {
@@ -49,16 +49,16 @@ var sendDroideForms = {
 			//fim de procurar validacao
 
 			if(sendDroideForms.next_erro.length != 0){
-				sendDroideForms.alert('danger',sendDroideForms.next_erro.join("<br />"));				
+				sendDroideForms.alert('danger',sendDroideForms.next_erro.join("<br />"));
 				sendDroideForms.next_erro = [];
 
 			 }else{
-				
+
 
 				sendDroideForms._sendajax();
-				
+
 			 }
-			
+
 			return false;
 		});
 	},
@@ -82,8 +82,8 @@ var sendDroideForms = {
 		if(type == 'f_integer'){
 
 			if(Math.floor(obj.val()) != obj.val() || j.isNumeric(obj.val()) != true){
-				
-				sendDroideForms.next_erro.push(mensagem);	
+
+				sendDroideForms.next_erro.push(mensagem);
 			}
 
 		}
@@ -105,7 +105,7 @@ var sendDroideForms = {
 					console.log('nao permite '+get_ext[0].toLowerCase());
 				}
 			}
-			
+
 		}
 
 
@@ -122,10 +122,10 @@ var sendDroideForms = {
 					sendDroideForms.next_erro.push(mensagem);
 						console.log('nao permite tamanho '+kbps);
 				}
-   
+
 			};
 
-			
+
 
 
 		}
@@ -169,11 +169,18 @@ var sendDroideForms = {
 				dados = jQuery.parseJSON( response.data );
 
 				if(dados.error){
-					sendDroideForms.alert(sendDroideForms.tipe_erros_class.danger,dados.msn);	
+					sendDroideForms.alert(sendDroideForms.tipe_erros_class.danger,dados.msn);
 				}else{
-					sendDroideForms.alert(sendDroideForms.tipe_erros_class.success,dados.msn);	
+
+					j.each(sendDroideForms.ob_form.find('[name]'),function(index, el) {
+							j(this).val('');
+							j(this).attr('disabled',true);
+					});
+
+
+					sendDroideForms.alert(sendDroideForms.tipe_erros_class.success,dados.msn);
 				}
-				
+
 			}
 		});
 	}
@@ -181,4 +188,3 @@ var sendDroideForms = {
 
 
 }
-
