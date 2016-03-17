@@ -11,15 +11,16 @@
 defined('_JEXEC') or die;
 
 /**
- * modDroideformsHelper contrala as validacoes e os ajax e recursos externos
+ * modDroideformsHelper control send and control submit forms
  */
 class modDroideformsHelper
 {
-	private static $pass_cript_decript = 'droideFomrs@@_645A';
+	private static $pass_cript_decript = 'droideFomrs@@_645A'; // scret key
 	public static $errors = array();
+	public static $log = "";
 
 	/**
-	 * Pega o ajax
+	 * return submit result ajax.
 	 */
 	public static function getAjax()
 	{
@@ -37,7 +38,8 @@ class modDroideformsHelper
 
 			$error = array(
 				'error'=>1,
-				'msn'=>self::$errors
+				'msn'=>self::$errors,
+				'log'=>self::$log
 				);
 
 			return  json_encode($error);
@@ -73,7 +75,6 @@ class modDroideformsHelper
 	 */
 	private function validateField($data,$post){
 		$validFiltros = json_decode($data->get('filtros'),true);
-
 		$return = true;
 		$tratamento = array();
 		$org_Errors = array();
@@ -92,7 +93,7 @@ class modDroideformsHelper
 			}
 		}
 
-		//verifico se existe erros na validação
+		//Check errors
 
 		if(count(self::$errors)){
 			$return = false;
@@ -103,8 +104,14 @@ class modDroideformsHelper
 
 	}
 
-    //aplico as validacoes de acordo com o tipo
+  /**
+   * Validate the form posts
+   */
 	private function __validate($attr_post, $validate){
+
+		$dispatcher = JDispatcher::getInstance();
+		JPluginHelper::importPlugin('droideforms');
+		$dispatcher->trigger('onDroideformsAddvalidate', array(&$attr_post, &$validate, &self::$log));
 
 		if($validate['tipo'] == 'f_required' ){
 			self::_required($attr_post['value'], $validate['msn']);
@@ -220,7 +227,6 @@ class modDroideformsHelper
 					$layout = str_replace('{'.$field['name'].'}', $field['value'], $layout);
 				}
 			}
-
 			$sender = array(
 			   $frommail,
 			   $fromname
@@ -232,6 +238,10 @@ class modDroideformsHelper
 				$emailTO = $module->get('para');
 			}
 
+			$dispatcher = JDispatcher::getInstance();
+			JPluginHelper::importPlugin('droideforms');
+			$dispatcher->trigger('onDroideformsBeforePublisheLayout', array(&$module, &$layout, &$post, &self::$log));
+
 			$mail = JFactory::getMailer();
 			$mail->isHTML(true);
 			$mail->Encoding = 'base64';
@@ -242,17 +252,23 @@ class modDroideformsHelper
 			if($mail->Send()){
 				$sucesso = array(
 				'error'=>0,
-				'msn'=>$module->get('resp_sucesso',JText::_('MOD_DROIDEFORMS_RESP_SUCESSO_DEFAULT'))
+				'msn'=>$module->get('resp_sucesso',JText::_('MOD_DROIDEFORMS_RESP_SUCESSO_DEFAULT')),
+				'log'=>self::$log
 				);
+
+				$dispatcher->trigger('onDroideformsPosSend', array(&$module,  &$post, &$sucesso,  &self::$log));
+
+
 				$return = json_encode($sucesso);
 			}else{
-
 				self::$errors[] = JText::_('MOD_DROIDEFORMS_RESP_ERROR_DEFAULT');
-
 				$error = array(
 					'error'=>1,
-					'msn'=>self::$errors
+					'msn'=>self::$errors,
+					'log'=>self::$log
 				);
+
+				$dispatcher->trigger('onDroideformsPosSend', array(&$module,  &$post, &$error,  &self::$log));
 
 				$return = json_encode($error);
 			}

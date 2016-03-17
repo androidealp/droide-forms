@@ -54,6 +54,9 @@ foreach ($filtros->tipo as $k => $tipo) {
 if($validacao){
  $validacao= json_encode($validacao);
 }
-
+//custom before Layout
+$dispatcher = JDispatcher::getInstance();
+JPluginHelper::importPlugin('droideforms');
+$dispatcher->trigger('onDroideformsBeforeLayout', array(&$id_form, &$js, &$params, &$validacao));
 
 require JModuleHelper::getLayoutPath('mod_droideforms', $params->get('layout', 'default'));

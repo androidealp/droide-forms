@@ -65,7 +65,11 @@ var sendDroideForms = {
 			return false;
 		});
 	},
-
+	logs:function(msn){
+		if(typeof msn == "string"){
+			console.log('return: '+msn);
+		}
+	},
 	_validate:function(type, obj,mensagem,condition){
 
 		if(type == 'f_required'){
@@ -102,10 +106,8 @@ var sendDroideForms = {
 				var get_ext = file.split('.');
 				get_ext = get_ext.reverse();
 				if ( j.inArray( get_ext[0].toLowerCase(), exts) > -1 ){
-					console.log('permite '+get_ext[0].toLowerCase());
 				}else{
 					sendDroideForms.next_erro.push(mensagem);
-					console.log('nao permite '+get_ext[0].toLowerCase());
 				}
 			}
 
@@ -122,13 +124,19 @@ var sendDroideForms = {
 
 				if(kbps>condition){
 					sendDroideForms.next_erro.push(mensagem);
-						console.log('nao permite tamanho '+kbps);
 				}
 
 			};
 
 		}
 
+		if(type == 'f_custom'){
+				sendDroideForms.custom_validator(obj,mensagem);
+		}
+
+	},
+	custom_validator:function(obj,mensagem){
+		return sendDroideForms.logs('Create instance of the custom_validator.');
 	},
 	alert:function(type, addtext){
 		//remove o ultimo alert
@@ -164,12 +172,20 @@ var sendDroideForms = {
 			data   : request,
 			beforeSend:function(){
 				sendDroideForms.alert(sendDroideForms.tipe_erros_class.info,sendDroideForms.divLoad());
+				j(sendDroideForms.id_form+' input[type=submit], '+sendDroideForms.id_form+' button').each(function() {
+					 j(this).attr('disabled',true);
+				});
 			},
 			success: function (response) {
 				dados = jQuery.parseJSON( response.data );
-
+				if(dados.log != ''){
+					sendDroideForms.logs(dados.log);
+				}
 				if(dados.error){
 					sendDroideForms.alert(sendDroideForms.tipe_erros_class.danger,dados.msn);
+					j(sendDroideForms.id_form+' input[type=submit], '+sendDroideForms.id_form+' button').each(function() {
+						 j(this).removeAttr('disabled');
+					});
 				}else{
 
 					sendDroideForms.alert(sendDroideForms.tipe_erros_class.success,dados.msn);
@@ -181,7 +197,7 @@ var sendDroideForms = {
 								j(this).attr('disabled',true);
 						});
 
-						j('#'+sendDroideForms.id_form+' input[type=submit], #'+sendDroideForms.id_form+' button').each(function() {
+						j(sendDroideForms.id_form+' input[type=submit], '+sendDroideForms.id_form+' button').each(function() {
 						   j(this).attr('disabled',true);
 						});
 

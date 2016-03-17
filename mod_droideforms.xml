@@ -25,7 +25,7 @@
 	<media folder="media" destination="mod_droideforms">
 		<folder>assets</folder>
 	</media>
-	
+
 	<config>
 		<fields name="params">
 			<fieldset name="options" label="COM_MODULES_BASIC_FIELDSET_LABEL">
@@ -51,8 +51,8 @@
 					<option value="1">JYES</option>
 					<option value="0">JNO</option>
 				</field>
-				
-					<field 
+
+					<field
 						name = "id_form"
 					    type = "text"
 					    default = "droide_formsid"
@@ -73,22 +73,23 @@
 								  <option value="f_integer">MOD_DROIDEFORMS_FILTRO_OBT_INTEGER</option>
 								  <option value="f_file">MOD_DROIDEFORMS_FILTRO_OBT_FILE</option>
 								  <option value="f_size">MOD_DROIDEFORMS_FILTRO_OBT_FILE_SIZE</option>
+									<option value="f_custom">MOD_DROIDEFORMS_FILTRO_OBT_CUSTOM</option>
 								</field>
-								<field 
+								<field
 									name = "field_condition"
 								    type = "text"
 								    default = ""
 								    label ="MOD_DROIDEFORMS_FIELD_CONDITION_LABEL"
 								    description ="MOD_DROIDEFORMS_FIELD_CONDITION_DESC"
 								/>
-								<field 
+								<field
 									name = "field_name"
 								    type = "text"
 								    default = ""
 								    label ="MOD_DROIDEFORMS_FIELD_NAME_LABEL"
 								    description ="MOD_DROIDEFORMS_FIELD_NAME_DESC"
 								/>
-								<field 
+								<field
 									name = "text_validador"
 								    type = "text"
 								    default = ""
@@ -98,9 +99,9 @@
 			                  </fieldset>
 			                  </fields>
 			                </field>
-			           
 
-					<field 
+
+					<field
 						name = "email_de_cliente"
 					    type = "text"
 					    default = "email"
@@ -108,7 +109,7 @@
 					    description ="MOD_DROIDEFORMS_EMAIL_CLIENTE_DESC"
 					     />
 
-					<field 
+					<field
 						name = "nome_de_cliente"
 					    type = "text"
 					    default = "nome"
@@ -116,7 +117,7 @@
 					    description ="MOD_DROIDEFORMS_NOME_CLIENTE_DESC"
 					     />
 
-					     <field 
+					     <field
 						name = "assunto"
 					    type = "text"
 					    default = ""
@@ -124,7 +125,7 @@
 					    description ="MOD_DROIDEFORMS_ASSUNTO_DESC"
 					     />
 
-					<field 
+					<field
 						name = "para"
 					    type = "text"
 					    default = ""
@@ -136,7 +137,7 @@
 					type="editor"
 					label="MOD_DROIDEFORMS_LAYOUT_ENVIO_LABEL"
 					description="MOD_DROIDEFORMS_LAYOUT_ENVIO_DESC"
-					width="900" 
+					width="900"
 					filter="safehtml" />
 
 					<field
@@ -144,7 +145,7 @@
 					type="editor"
 					label="MOD_DROIDEFORMS_RESP_SUCESSO"
 					description="MOD_DROIDEFORMS_RESP_SUCESSO_DESC"
-					width="900" 
+					width="900"
 					filter="safehtml" />
 
 			</fieldset>
