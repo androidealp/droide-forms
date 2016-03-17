@@ -1,8 +1,12 @@
-
+/**
+ * sendDroideForms
+ * script para manipulação do formulário
+ */
 var sendDroideForms = {
 	next_erro:[],
 	ob_form:'',
 	id_form:'',
+	success_disable_forms:true,
 	alert_class:'alert alert-',
 	tipe_erros_class:{
 		danger:'danger',
@@ -53,7 +57,6 @@ var sendDroideForms = {
 				sendDroideForms.next_erro = [];
 
 			 }else{
-
 
 				sendDroideForms._sendajax();
 
@@ -108,7 +111,6 @@ var sendDroideForms = {
 
 		}
 
-
 		if(type=='f_size'){
 			//add condition
 
@@ -125,9 +127,6 @@ var sendDroideForms = {
 
 			};
 
-
-
-
 		}
 
 	},
@@ -135,7 +134,7 @@ var sendDroideForms = {
 		//remove o ultimo alert
 		j(sendDroideForms.id_form+'_alert').remove();
 		//imprime o alert
-		j(sendDroideForms.id_form).prepend(
+		j(sendDroideForms.id_form).before(
 			j('<div/>',{
 				    id: sendDroideForms.id_form.replace('#', '')+'_alert',
 				    class:sendDroideForms.alert_class+type,
@@ -143,6 +142,7 @@ var sendDroideForms = {
 				})
 			);
 	},
+
 	divLoad:function(){
 		return "<img src='../media/mod_droideforms/assets/ajax-loader.gif' /> Load...";
 	},
@@ -172,13 +172,21 @@ var sendDroideForms = {
 					sendDroideForms.alert(sendDroideForms.tipe_erros_class.danger,dados.msn);
 				}else{
 
-					j.each(sendDroideForms.ob_form.find('[name]'),function(index, el) {
-							j(this).val('');
-							j(this).attr('disabled',true);
-					});
-
-
 					sendDroideForms.alert(sendDroideForms.tipe_erros_class.success,dados.msn);
+					if(sendDroideForms.success_disable_forms){
+						sendDroideForms.ob_form.remove();
+					}else{
+						j.each(sendDroideForms.ob_form.find('[name]'),function(index, el) {
+								j(this).val('');
+								j(this).attr('disabled',true);
+						});
+
+						j('#'+sendDroideForms.id_form+' input[type=submit], #'+sendDroideForms.id_form+' button').each(function() {
+						   j(this).attr('disabled',true);
+						});
+
+					}
+
 				}
 
 			}
