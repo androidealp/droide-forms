@@ -281,7 +281,7 @@ class modDroideformsHelper
 
 
 /**
- * Encrypt text
+ * Encrypt id of module
  * @param int $data id para criptar
  * @return string criptada
  */
@@ -291,32 +291,23 @@ public function Encrypt($data)
     $salt = substr(md5(mt_rand(), true), 8);
 
     $key = md5($password . $salt, true);
-    $iv  = md5($key . $password . $salt, true);
-
-    $ct = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $key, $data, MCRYPT_MODE_CBC, $iv);
-
-    return base64_encode('Salted__' . $salt . $ct);
+    $mont  = $key.'::-'.$data;
+    return $mont;
 }
 
 /**
- * Encrypt text
+ * decript id of module
  * @param int $data id para decriptar
  * @return string decriptada
  */
 private function Decrypt($data)
 {
-		$password = self::$pass_cript_decript;
-
-    $data = base64_decode($data);
-    $salt = substr($data, 8, 8);
-    $ct   = substr($data, 16);
-
-    $key = md5($password . $salt, true);
-    $iv  = md5($key . $password . $salt, true);
-
-    $pt = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $key, $ct, MCRYPT_MODE_CBC, $iv);
-
-    return $pt;
+	$alter = explode('::-',$data);
+$return = '';
+	if(isset($alter[1])){
+		$return = $alter[1];
+	}
+  return (int)$return;
 }
 
 
