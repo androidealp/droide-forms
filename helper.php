@@ -268,7 +268,7 @@ class modDroideformsHelper
 					'log'=>self::$log
 				);
 
-				$dispatcher->trigger('onDroideformsPosSend', array(&$module,  &$post, &$error,  &self::$log));
+				$dispatcher->trigger('onDroideformsPosSendError', array(&$module,  &$post, &$error,  &self::$log));
 
 				$return = json_encode($error);
 			}
