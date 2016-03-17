@@ -9,14 +9,13 @@
  * @author 		André Luiz Pereira <[<andre@next4.com.br>]>
  */
 
-defined('_JEXEC') or die;  
+defined('_JEXEC') or die;
 
 /**
  * modDroideformsHelper control send and control submit forms
  */
 class modDroideformsHelper
 {
-	private static $pass_cript_decript = 'droideFomrs@@_645A'; // scret key
 	public static $errors = array();
 	public static $log = "";
 
@@ -52,7 +51,6 @@ class modDroideformsHelper
 	 * @param int $id id do modulo
 	 */
 	private function getModule($id){
-		$id = self::Decrypt($id);
 		jimport('joomla.application.module.helper');
 		$module = JModuleHelper::getModule('droideforms');
 		$params = new JRegistry();
@@ -278,38 +276,5 @@ class modDroideformsHelper
 
 			return $return;
 	}
-
-
-/**
- * Encrypt id of module
- * @param int $data id para criptar
- * @return string criptada
- */
-public function Encrypt($data)
-{
-	$password = self::$pass_cript_decript;
-    $salt = substr(md5(mt_rand(), true), 8);
-
-    $key = md5($password . $salt, true);
-    $mont  = $key.'::-'.$data;
-    return $mont;
-}
-
-/**
- * decript id of module
- * @param int $data id para decriptar
- * @return string decriptada
- */
-private function Decrypt($data)
-{
-	$alter = explode('::-',$data);
-$return = '';
-	if(isset($alter[1])){
-		$return = $alter[1];
-	}
-  return (int)$return;
-}
-
-
 
 }
