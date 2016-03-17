@@ -51,8 +51,17 @@
 					<option value="1">JYES</option>
 					<option value="0">JNO</option>
 				</field>
-
-					<field
+				<field
+					name="loadCss"
+					type="radio"
+					class="btn-group btn-group-yesno"
+					label="MOD_DROIDEFORMS_LOADCSS_LABEL"
+					description="MOD_DROIDEFORMS_LOADCSS_DESC"
+					default="1">
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>
+				<field
 						name = "id_form"
 					    type = "text"
 					    default = "droide_formsid"

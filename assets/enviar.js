@@ -156,7 +156,7 @@ var sendDroideForms = {
 	},
 
 	divLoad:function(){
-		return "<img src='../media/mod_droideforms/assets/ajax-loader.gif' /> Load...";
+		return "<div class='cssload-spin-box'></div> Load...";
 	},
 	_sendajax:function(){
 
