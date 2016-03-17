@@ -225,7 +225,10 @@ class modDroideformsHelper
 				}
 
 				if(strrpos($layout, '{'.$field['name'].'}')){
-					$layout = str_replace('{'.$field['name'].'}', $field['value'], $layout);
+					$limpar= strip_tags($field['name']);
+					$elemento = preg_replace('/[^A-Za-z0-9]/', '', $limpar);
+					$regex	= '/{'.$elemento.'}/i';
+					$layout = preg_replace($regex, $field['value'], $layout);
 				}
 			}
 			$sender = array(
