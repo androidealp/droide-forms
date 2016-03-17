@@ -6,7 +6,7 @@ var sendDroideForms = {
 	next_erro:[],
 	ob_form:'',
 	id_form:'',
-	success_disable_forms:true,
+	success_disable_forms:true, /* recommend true */
 	alert_class:'alert alert-',
 	tipe_erros_class:{
 		danger:'danger',
