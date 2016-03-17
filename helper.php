@@ -16,6 +16,7 @@ defined('_JEXEC') or die;
  */
 class modDroideformsHelper
 {
+	private static $pass_cript_decript = 'droideFomrs@@_645A'; // scret key
 	public static $errors = array();
 	public static $log = "";
 
@@ -47,10 +48,12 @@ class modDroideformsHelper
 
 	}
 	/**
-	 * Pega o modulo
+	 * Return params module 
 	 * @param int $id id do modulo
 	 */
 	private function getModule($id){
+		//decript id of the module
+		$id = self::Decrypt($id);
 		jimport('joomla.application.module.helper');
 		$module = JModuleHelper::getModule('droideforms');
 		$params = new JRegistry();
@@ -68,9 +71,9 @@ class modDroideformsHelper
 
 	}
 	/**
-	 * Validar os elementos do field
-	 * @param array $data lista de validacões
-	 * @return bolean true false
+	 * Valid Elements post
+	 * @param array $data validations List
+	 * @return bolean true or false
 	 */
 	private function validateField($data,$post){
 		$validFiltros = json_decode($data->get('filtros'),true);
@@ -276,5 +279,44 @@ class modDroideformsHelper
 
 			return $return;
 	}
+
+	/**
+ * This encrypt id the module in frondend
+ * @param int $data id the module
+ * @return string criptada
+ */
+public function Encrypt($data)
+{
+	$password = self::$pass_cript_decript;
+    $salt = substr(md5(mt_rand(), true), 8);
+
+    $key = md5($password . $salt, true);
+    $iv  = md5($key . $password . $salt, true);
+
+    $ct = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $key, $data, MCRYPT_MODE_CBC, $iv);
+
+    return base64_encode('Salted__' . $salt . $ct);
+}
+
+/**
+ * This decripty id the module in backend
+ * @param int $data id the module
+ * @return string decriptada
+ */
+private function Decrypt($data)
+{
+		$password = self::$pass_cript_decript;
+
+    $data = base64_decode($data);
+    $salt = substr($data, 8, 8);
+    $ct   = substr($data, 16);
+
+    $key = md5($password . $salt, true);
+    $iv  = md5($key . $password . $salt, true);
+
+    $pt = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $key, $ct, MCRYPT_MODE_CBC, $iv);
+
+    return $pt;
+}
 
 }

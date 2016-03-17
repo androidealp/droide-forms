@@ -22,8 +22,8 @@ $doc->addScript(JUri::base() . 'media/mod_droideforms/assets/enviar.js');
 $loadJquery = $params->get('loadJquery', 0);
 $loadCss = $params->get('loadCss', 1);
 $helper = new modDroideformsHelper();
-
-$idmodule = (int)$module->id;
+//Encrypt id of the module
+$idmodule = $helper->Encrypt($module->id);
 
 if($loadJquery){
 	$doc->addScript(JUri::base() . 'media/mod_droideforms/assets/jquery-1.12.0.min.js');
