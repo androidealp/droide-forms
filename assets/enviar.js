@@ -1,6 +1,10 @@
 /**
- * sendDroideForms
- * script para manipulação do formulário
+ * @package     Droideforms.Module
+ * @subpackage  droideforms
+ *
+ * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ * @author 		André Luiz Pereira <[<andre@next4.com.br>]>
  */
 var sendDroideForms = {
 	next_erro:[],
