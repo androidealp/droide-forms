@@ -9,7 +9,7 @@
  * @author 		André Luiz Pereira <[<andre@next4.com.br>]>
  */
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die;  
 
 /**
  * modDroideformsHelper control send and control submit forms
