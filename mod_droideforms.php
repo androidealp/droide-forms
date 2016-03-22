@@ -60,6 +60,13 @@ foreach ($filtros->tipo as $k => $tipo) {
 if($validacao){
  $validacao= json_encode($validacao);
 }
+
+if ($params->def('prepare_content', 1))
+{
+	JPluginHelper::importPlugin('content');
+	$module->content = JHtml::_('content.prepare', $module->content, '', 'mod_custom.content');
+}
+
 //custom before Layout
 $dispatcher = JDispatcher::getInstance();
 JPluginHelper::importPlugin('droideforms');
