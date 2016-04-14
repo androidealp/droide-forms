@@ -18,7 +18,7 @@ class modDroideformsHelper
 {
 	private static $pass_cript_decript = 'droideFomrs@@_645A'; // scret key
 	public static $errors = array();
-	public static $log = "";
+	public static $log = ""; //self::$log .= "retornou: __size val= ".$valor['size']." || size = ".$attr['condition'];
 
 	/**
 	 * return submit result ajax.
@@ -26,29 +26,75 @@ class modDroideformsHelper
 	public static function getAjax()
 	{
 
-		$input = JFactory::getApplication()->input;
+		$app = JFactory::getApplication();
+		$doc = JFactory::getDocument();
+		$input = $app->input;
 		$id_extension  = $input->get('id_ext',0,'STRING');
-		$post = $input->post->get('droideform',0,'ARRAY');
+		$post_check = $input->post->get('droide',0,'INT');
 		$params = self::getModule($id_extension);
+		$files = $input->files->getArray();
+		$posts = $input->post->getArray();
+		$return = array();
+		if(self::validateField($params,$posts,$files)){
 
+			$return = self::_sendEmail($params, $posts, $files);
 
-		if(self::validateField($params,$post)){
-
-				return  self::_sendEmail($params, $post);
 		}else{
-
-			$error = array(
-				'error'=>1,
-				'msn'=>self::$errors,
-				'log'=>self::$log
-				);
-
-			return  json_encode($error);
+			$return = json_encode(array(
+			 		'error'=>1,
+			 		'msn'=>self::$errors,
+					'log'=>self::$log
+				));
 		}
+
+		return  $return;
+
+
+		// if($post_check && $post_check == 1){
+		//
+		// 	$files = $input->files->getArray();
+		// 	$posts = $input->post->getArray();
+		//
+		//
+		//
+		// 	$doc->setMimeEncoding('application/json');
+		// 	 			JResponse::setHeader('Content-Disposition','attachment;filename="progress-report-results.json"');
+		// 	 			print_r($files);
+		// 	 			$app->close();
+		// }
+
+
+		//
+		//
+		//
+		// //$files = $input->files->get('droideform',0,'ARRAY');
+		// $files = $_FILES;
+		// $params = self::getModule($id_extension);
+		//
+		// // /self::validateField($params,$post) &&
+		// if(self::validateFiles($files)){
+		//
+		// 	return  self::_sendEmail($params, $post);
+		//
+		// }else{
+		//
+		// 	$error = array(
+		// 		'error'=>1,
+		// 		'msn'=>self::$errors,
+		// 		'log'=>self::$log
+		// 		);
+		//
+		// 		$doc->setMimeEncoding('application/json');
+		// 			JResponse::setHeader('Content-Disposition','attachment;filename="progress-report-results.json"');
+		// 			echo json_encode($error);
+		// 			$app->close();
+		//
+		// 	//return  json_encode($error);
+		// }
 
 	}
 	/**
-	 * Return params module 
+	 * Return params module
 	 * @param int $id id do modulo
 	 */
 	private function getModule($id){
@@ -70,28 +116,38 @@ class modDroideformsHelper
 		return $params;
 
 	}
+
+
 	/**
 	 * Valid Elements post
 	 * @param array $data validations List
 	 * @return bolean true or false
 	 */
-	private function validateField($data,$post){
+	private function validateField($data,$post, $files = array()){
 		$validFiltros = json_decode($data->get('filtros'),true);
 		$return = true;
 		$tratamento = array();
 		$org_Errors = array();
 		//organizo os erros listados no adm e organizando em uma lista com o indice do field name
 		foreach ($validFiltros['field_name'] as $k => $fild_name) {
-			$org_Errors[$fild_name] = array(
-					'tipo'=>$validFiltros['tipo'][$k],
-					'condition'=>$validFiltros['field_condition'][$k],
-					'msn'=>$validFiltros['text_validador'][$k]
-				);
-		}
-		// verico se nos campos de validação existe post, se sim aplico a validação
-		foreach ($post as $index => $attr) {
-			if(isset($org_Errors[$attr['name']])){
-				self::__validate($attr,$org_Errors[$attr['name']]);
+
+			$validador = array(
+				'tipo'=>$validFiltros['tipo'][$k],
+				'condition'=>$validFiltros['field_condition'][$k],
+				'msn'=>$validFiltros['text_validador'][$k]
+			);
+
+			foreach ($post as $index => $attr) {
+				if($fild_name == $index){
+					self::__validate($attr,$validador);
+				}
+			}
+
+			foreach ($files as $i => $att) {
+
+				if($fild_name == $i){
+					self::__validate($att,$validador);
+				}
 			}
 		}
 
@@ -109,31 +165,30 @@ class modDroideformsHelper
   /**
    * Validate the form posts
    */
-	private function __validate($attr_post, $validate){
+	private function __validate($value, $validate){
 
 		$dispatcher = JDispatcher::getInstance();
 		JPluginHelper::importPlugin('droideforms');
-		$dispatcher->trigger('onDroideformsAddvalidate', array(&$attr_post, &$validate, &self::$log));
-
+		$dispatcher->trigger('onDroideformsAddvalidate', array(&$value, &$validate, &self::$log));
 		if($validate['tipo'] == 'f_required' ){
-			self::_required($attr_post['value'], $validate['msn']);
+			self::_required($value, $validate['msn']);
 		}
 
 		if($validate['tipo'] == 'f_email' ){
-			self::__checkEmail($attr_post['value'], $validate['msn']);
+			self::__checkEmail($value, $validate['msn']);
 		}
 
 		if($validate['tipo'] == 'f_integer'){
-			self::_interger($attr_post['value'], $validate['msn']);
+			self::_interger($value, $validate['msn']);
 		}
 
-		if($validate['tipo'] == 'f_file'){
-			self::__file($attr_post['value'], $validate);
-		}
+		 if($validate['tipo'] == 'f_file'){
+		 	self::__file($value, $validate);
+		 }
 
 		if($validate['tipo'] == 'f_size'){
-			self::__size($attr_post['value'], $validate);
-		}
+			self::__size($value, $validate);
+		 }
 
 	}
 
@@ -179,8 +234,9 @@ class modDroideformsHelper
 	 * @return [type]        [description]
 	 */
 	private function __file($valor, $attr){
-		$ext = JFile::getExt($valor);
+		$ext = JFile::getExt($valor['name']);
 		$condition = explode(';',$attr['condition']);
+
 		if(!in_array($ext, $condition)){
 			self::$errors[] = $attr['msn'];
 		}
@@ -193,13 +249,39 @@ class modDroideformsHelper
 	 * @return [type]        [description]
 	 */
 	private function __size($valor, $attr){
-		$size = $attr['condition'] / 1024;
-		if($valor['size'] > $size){
+
+		if($valor['size'] >  $attr['condition']){
 			self::$errors[] = $attr['msn'];
 		}
 	}
 
 
+
+private function _uploadFile($files){
+	$return = array();
+	if(count($files)){
+
+		foreach ($files as $name => $file) {
+			$filename = JFile::makeSafe($file['name']);
+			$filename = preg_replace("/[^A-Za-z0-9-.-_]/i", "-", $filename);
+			$filename = rand(1,9999999).'-'.$filename;
+			$dest = JPATH_SITE.'/images/form_files/'.$filename;
+			if(!JFile::upload($file['tmp_name'], $dest)){
+				self::$errors[] = "Erro ao enviar o arquivo $filename";
+
+			}else{
+				$url_destino = JURI::base().'images'.DS.'form_files'.DS.$filename;
+				$return[] = array(
+						'root'=>$url_destino,
+						'path'=>$dest,
+				);
+			}
+
+		}
+	}
+
+	return $return;
+}
 
 
 	/**
@@ -208,7 +290,7 @@ class modDroideformsHelper
 	 * @param  array $post   post do formulário
 	 * @return string         mensagem de sucesso ou de erro
 	 */
-	private function _sendEmail($module, $post){
+	private function _sendEmail($module, $post, $files){
 			$config = JFactory::getConfig();
 			$return = '';
 			$frommail = "";
@@ -217,20 +299,24 @@ class modDroideformsHelper
 
 			foreach ($post as $k => $field) {
 
-				if($field['name'] = $module->get('nome_de_cliente')){
-					$fromname = $field['value'];
+				if($k == $module->get('nome_de_cliente')){
+					$fromname = $field;
 				}
 
-				if($field['name'] = $module->get('email_de_cliente')){
-					$frommail = $field['value'];
+				if($k  == $module->get('email_de_cliente')){
+					$frommail = $field;
 				}
 
-				if(strrpos($layout, '{'.$field['name'].'}')){
-					$limpar= strip_tags($field['name']);
-					$regex	= '/{'.$elemento.'}/i';
-					$layout = preg_replace($regex, $field['value'], $layout);
+				if(strrpos($layout, '{'.$k.'}')){
+					$limpar= trim(strip_tags($k));
+					$regex	= '/{'.$k.'}/i';
+					$layout = preg_replace($regex, $field, $layout);
 				}
 			}
+
+			$attachments_file = self::_uploadFile($files);
+
+
 			$sender = array(
 			   $frommail,
 			   $fromname
@@ -245,7 +331,6 @@ class modDroideformsHelper
 			$dispatcher = JDispatcher::getInstance();
 			JPluginHelper::importPlugin('droideforms');
 			$dispatcher->trigger('onDroideformsBeforePublisheLayout', array(&$module, &$layout, &$post, &self::$log));
-
 			$mail = JFactory::getMailer();
 			$mail->isHTML(true);
 			$mail->Encoding = 'base64';
@@ -253,6 +338,12 @@ class modDroideformsHelper
 			$mail->setSender($sender);
 			$mail->setSubject($module->get('assunto'));
 			$mail->setBody($layout);
+			if($attachments_file ){
+					foreach ($attachments_file as $k => $file) {
+							$mail->addAttachment($file['path']);
+					}
+			}
+
 			if($mail->Send()){
 				$sucesso = array(
 				'error'=>0,
@@ -260,10 +351,10 @@ class modDroideformsHelper
 				'log'=>self::$log
 				);
 
+				$return = json_encode($sucesso);
+
 				$dispatcher->trigger('onDroideformsPosSend', array(&$module,  &$post, &$sucesso,  &self::$log));
 
-
-				$return = json_encode($sucesso);
 			}else{
 				self::$errors[] = JText::_('MOD_DROIDEFORMS_RESP_ERROR_DEFAULT');
 				$error = array(

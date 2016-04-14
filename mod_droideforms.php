@@ -11,6 +11,10 @@
 defined('_JEXEC') or die;
 require_once __DIR__ . '/helper.php';
 
+$helper = new modDroideformsHelper();
+
+//$helper->getAjax();
+
 $doc = JFactory::getDocument();
 
 //ler script php
@@ -21,7 +25,7 @@ $doc->addScript(JUri::base() . 'media/mod_droideforms/assets/enviar.js');
 
 $loadJquery = $params->get('loadJquery', 0);
 $loadCss = $params->get('loadCss', 1);
-$helper = new modDroideformsHelper();
+
 //Encrypt id of the module
 $idmodule = $helper->Encrypt($module->id);
 

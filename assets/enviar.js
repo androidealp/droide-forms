@@ -6,10 +6,12 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  * @author 		André Luiz Pereira <[<andre@next4.com.br>]>
  */
+
 var sendDroideForms = {
 	next_erro:[],
 	ob_form:'',
 	id_form:'',
+	fm_data:'',
 	success_disable_forms:true, /* recommend true */
 	alert_class:'alert alert-',
 	tipe_erros_class:{
@@ -24,6 +26,7 @@ var sendDroideForms = {
 			sendDroideForms.id_form = id_form;
 
 			j(id_form).submit(function(event){
+				sendDroideForms.fm_data = new FormData(this);
 				event.preventDefault();
 				sendDroideForms.next_erro = [];
 				$formdata 	= j(this).data('droidevalid');
@@ -158,23 +161,53 @@ var sendDroideForms = {
 	divLoad:function(){
 		return "<div class='cssload-spin-box'></div> Load...";
 	},
+	__serializeAll:function(){
+		sendDroideForms.fm_data.append('droide',1);
+		sendDroideForms.fm_data.append('option','com_ajax');
+		sendDroideForms.fm_data.append('module','droideforms');
+		sendDroideForms.fm_data.append('id_ext',sendDroideForms.ob_form.data('extension'));
+		sendDroideForms.fm_data.append('format','json');
+
+
+		 return sendDroideForms.fm_data;
+
+
+		 		//data_file.append('forms',sendDroideForms.fm_data);
+
+
+
+		 		// sendDroideForms.ob_form.find('[type=file]').each(function(i,e){
+		 		// 			data_file.append('files'+i,j(e)[0].files[0]);
+		 		//  });
+		// var formdata   = sendDroideForms.ob_form.serializeArray();
+		// var data_file = new FormData();
+		//
+		// sendDroideForms.ob_form.find('[type=file]').each(function(i,e){
+		// 	data_file.append('files'+i,j(e)[0].files[0]);
+		// });
+		//
+		//  if(data_file){
+		//  		formdata.push({name:'files',value:data_file});
+		//  		formdata.push(data_file);
+		//  	}
+		//
+		// return formdata;
+
+	},
 	_sendajax:function(){
 
 		data_ext = sendDroideForms.ob_form.data('extension');
 
-		//var formdata   = JSON.stringify(sendDroideForms.ob_form.serializeArray());
-		var formdata   = sendDroideForms.ob_form.serializeArray();
-			request = {
-					'option' : 'com_ajax',
-					'module' : 'droideforms',
-					'droideform': formdata,
-					'id_ext': data_ext,
-					'format' : 'json'
-				};
+		var formdata = sendDroideForms.__serializeAll();
 		j.ajax({
-			type   : 'POST',
-			data   : request,
-			beforeSend:function(){
+			type   			: 'POST',
+			data   			: formdata,
+			dataTyoe:'JSON',
+			contentType: false,
+      processData: false,
+			cache:false,
+			//enctype			: 'multipart/form-data',
+			beforeSend	:function(){
 				sendDroideForms.alert(sendDroideForms.tipe_erros_class.info,sendDroideForms.divLoad());
 				j(sendDroideForms.id_form+' input[type=submit], '+sendDroideForms.id_form+' button').each(function() {
 					 j(this).attr('disabled',true);
@@ -212,7 +245,4 @@ var sendDroideForms = {
 			}
 		});
 	}
-
-
-
 }
