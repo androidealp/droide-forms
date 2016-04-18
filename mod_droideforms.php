@@ -60,10 +60,12 @@ if(!$params->get('id_form',0)){
 
 $filtros = json_decode($params->get('filtros'));
 $validacao = array();
-foreach ($filtros->tipo as $k => $tipo) {
-	$validacao[] = array($tipo=>$filtros->field_name[$k],'condition'=>$filtros->field_condition[$k],'mensagem'=>$filtros->text_validador[$k]);
-}
 
+if($filtros){
+	foreach ($filtros->tipo as $k => $tipo) {
+		$validacao[] = array($tipo=>$filtros->field_name[$k],'condition'=>$filtros->field_condition[$k],'mensagem'=>$filtros->text_validador[$k]);
+	}
+}
 if($validacao){
  $validacao= json_encode($validacao);
 }
