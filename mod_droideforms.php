@@ -21,9 +21,8 @@ $doc = JFactory::getDocument();
 //$doc =& JDocument::getInstance( 'mytype' );
 //$renderer =& $doc->loadRenderer( 'myrenderer' );
 
-$doc->addScript(JUri::base() . 'media/mod_droideforms/assets/enviar.js');
-
 $loadJquery = $params->get('loadJquery', 0);
+$loadLib = $params->get('libajax',1);
 $loadCss = $params->get('loadCss', 1);
 
 //Encrypt id of the module
@@ -31,6 +30,10 @@ $idmodule = $helper->Encrypt($module->id);
 
 if($loadJquery){
 	$doc->addScript(JUri::base() . 'media/mod_droideforms/assets/jquery-1.12.0.min.js');
+}
+
+if($loadLib){
+	$doc->addScript(JUri::base() . 'media/mod_droideforms/assets/enviar.js');
 }
 
 if($loadCss){
