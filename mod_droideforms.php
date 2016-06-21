@@ -5,10 +5,16 @@
  *
  * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
- * @author 		André Luiz Pereira <[<andre@next4.com.br>]>
+ * @author 		André Luiz Pereira <[<and4563@gmail.com>]>
  */
 
 defined('_JEXEC') or die;
+
+//instance plugin
+$dispatcher = JDispatcher::getInstance();
+JPluginHelper::importPlugin('droideforms');
+$dispatcher->trigger('onDroideformsInit');
+
 require_once __DIR__ . '/helper.php';
 
 $helper = new modDroideformsHelper();
@@ -21,8 +27,9 @@ $doc = JFactory::getDocument();
 //$doc =& JDocument::getInstance( 'mytype' );
 //$renderer =& $doc->loadRenderer( 'myrenderer' );
 
+$doc->addScript(JUri::base() . 'media/mod_droideforms/assets/enviar.js');
+
 $loadJquery = $params->get('loadJquery', 0);
-$loadLib = $params->get('libajax',1);
 $loadCss = $params->get('loadCss', 1);
 
 //Encrypt id of the module
@@ -30,10 +37,6 @@ $idmodule = $helper->Encrypt($module->id);
 
 if($loadJquery){
 	$doc->addScript(JUri::base() . 'media/mod_droideforms/assets/jquery-1.12.0.min.js');
-}
-
-if($loadLib){
-	$doc->addScript(JUri::base() . 'media/mod_droideforms/assets/enviar.js');
 }
 
 if($loadCss){
@@ -60,12 +63,10 @@ if(!$params->get('id_form',0)){
 
 $filtros = json_decode($params->get('filtros'));
 $validacao = array();
-
-if($filtros){
-	foreach ($filtros->tipo as $k => $tipo) {
-		$validacao[] = array($tipo=>$filtros->field_name[$k],'condition'=>$filtros->field_condition[$k],'mensagem'=>$filtros->text_validador[$k]);
-	}
+foreach ($filtros->tipo as $k => $tipo) {
+	$validacao[] = array($tipo=>$filtros->field_name[$k],'condition'=>$filtros->field_condition[$k],'mensagem'=>$filtros->text_validador[$k]);
 }
+
 if($validacao){
  $validacao= json_encode($validacao);
 }
@@ -76,9 +77,7 @@ if ($params->def('prepare_content', 1))
 	$module->content = JHtml::_('content.prepare', $module->content, '', 'mod_custom.content');
 }
 
-//custom before Layout
-$dispatcher = JDispatcher::getInstance();
-JPluginHelper::importPlugin('droideforms');
+
 $dispatcher->trigger('onDroideformsBeforeLayout', array(&$id_form, &$js, &$params, &$validacao));
 
 require JModuleHelper::getLayoutPath('mod_droideforms', $params->get('layout', 'default'));

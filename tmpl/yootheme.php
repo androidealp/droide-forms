@@ -42,9 +42,23 @@ defined('_JEXEC') or die;
 var j = jQuery.noConflict();
 
 j(document).ready(function(){
+// my custm class
 sendDroideForms.alert_class = 'uk-alert uk-alert-';
+//my cystom load
  sendDroideForms.divLoad = function(){
   return "<p class='uk-text-center'><i class='uk-icon-spinner uk-icon-spin'></i></p>";
  };
+
+ // my custom alert
+ // sendDroideForms.alert = function(type, addtext){
+ //   j(sendDroideForms.id_form+'_alert').remove();
+ //   j(sendDroideForms.id_form).before(
+ //     j('<div/>',{
+ //           id: sendDroideForms.id_form.replace('#', '')+'_alert',
+ //           class:sendDroideForms.alert_class+type,
+ //           html: addtext
+ //       })
+ //     );
+ // };
 });
 </script>

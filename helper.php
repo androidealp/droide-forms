@@ -13,9 +13,6 @@ defined('_JEXEC') or die;
 
 /**
  * modDroideformsHelper control send and control submit forms
- * @property string $pass_cript_decript secret key cripts
- * @property array $errors errors of the system
- * @property string $log log for tests, of the system or plugins
  */
 class modDroideformsHelper
 {
@@ -40,7 +37,14 @@ class modDroideformsHelper
 		$return = array();
 		if(self::validateField($params,$posts,$files)){
 
-			$return = self::_sendEmail($params, $posts, $files);
+		 $return = self::_sendEmail($params, $posts, $files);
+
+		//  para testes sem envio
+		// $return = json_encode(array(
+		// 		'error'=>0,
+		// 		'msn'=>'ok teste',
+		// 		'log'=>self::$log
+		// 	));
 
 		}else{
 			$return = json_encode(array(
@@ -51,6 +55,8 @@ class modDroideformsHelper
 		}
 
 		return  $return;
+
+
 
 	}
 	/**
@@ -89,7 +95,14 @@ class modDroideformsHelper
 		$tratamento = array();
 		$org_Errors = array();
 
-		//organize list the fields
+		$dispatcher = JDispatcher::getInstance();
+		JPluginHelper::importPlugin('droideforms');
+
+
+		$dispatcher->trigger('onDroideformsAddvalidate', array(&$post, &$validFiltros, &self::$errors, &self::$log));
+
+
+		//organizo os erros listados no adm e organizando em uma lista com o indice do field name
 		foreach ($validFiltros['field_name'] as $k => $fild_name) {
 
 			$validador = array(
@@ -123,16 +136,15 @@ class modDroideformsHelper
 
 	}
 
-	/**
-	 * Check form posts, checked in admin
-	 * @param  string $value value of field
-	 * @param  array $msn  list the tools for validate
-	 */
+  /**
+   * Validate the form posts
+   */
 	private function __validate($value, $validate){
 
 		$dispatcher = JDispatcher::getInstance();
 		JPluginHelper::importPlugin('droideforms');
-		$dispatcher->trigger('onDroideformsAddvalidate', array(&$value, &$validate, &self::$log));
+		$dispatcher->trigger('onDroideformsAddrules', array(&$value, &$validate, &self::$errors, &self::$log));
+
 		if($validate['tipo'] == 'f_required' ){
 			self::_required($value, $validate['msn']);
 		}
@@ -154,11 +166,7 @@ class modDroideformsHelper
 		 }
 
 	}
-	/**
-	 * Check is interger
-	 * @param  string $valor value of field
-	 * @param  string $msn   messager of the error
-	 */
+
 	private function _interger($valor, $msn){
 		$filter_options = array(
 		    'options' => array( 'min_range' => 0)
@@ -171,9 +179,10 @@ class modDroideformsHelper
 	}
 
 	/**
-	 * Check is required
-	 * @param  string $valor value of field
-	 * @param  string $msn   messager of the error
+	 * Verico se o campo é requirido
+	 * @param  [type] $valor [description]
+	 * @param  [type] $msn   [description]
+	 * @return [type]        [description]
 	 */
 	private function _required($valor, $msn){
 		if(empty($valor)){
@@ -182,9 +191,10 @@ class modDroideformsHelper
 	}
 
 	/**
-	 *  is email Valid
-	 * @param  string $valor value of field mail
-	 * @param  string $msn   messager of the error
+	 * Verifico se o email é valido
+	 * @param  [type] $valor [description]
+	 * @param  [type] $msn   [description]
+	 * @return [type]        [description]
 	 */
 	private function __checkEmail($valor, $msn){
 		if(empty($valor) ||  !filter_var($valor, FILTER_VALIDATE_EMAIL)){
@@ -250,9 +260,9 @@ private function _uploadFile($files){
 
 
 	/**
-	 * Send Mail
-	 * @param  object $module module object
-	 * @param  array $post   post form
+	 * Envio de e-mail
+	 * @param  object $module Objeto com o conteúdo do módulo
+	 * @param  array $post   post do formulário
 	 * @return string         mensagem de sucesso ou de erro
 	 */
 	private function _sendEmail($module, $post, $files){
@@ -309,24 +319,7 @@ private function _uploadFile($files){
 					}
 			}
 
-			$send = $mail->Send();
-
-			if($send !== true){
-				//
-				self::$errors[] =JText::_('MOD_DROIDEFORMS_RESP_ERROR_DEFAULT').' '.$send->__toString();
-				$error = array(
-					'error'=>1,
-					'msn'=>self::$errors,
-					'log'=>self::$log
-				);
-
-				$dispatcher->trigger('onDroideformsPosSendError', array(&$module,  &$post, &$error,  &self::$log));
-
-				$return = json_encode($error);
-
-			}else{
-
-
+			if($mail->Send()){
 				$sucesso = array(
 				'error'=>0,
 				'msn'=>$module->get('resp_sucesso',JText::_('MOD_DROIDEFORMS_RESP_SUCESSO_DEFAULT')),
@@ -337,6 +330,17 @@ private function _uploadFile($files){
 
 				$dispatcher->trigger('onDroideformsPosSend', array(&$module,  &$post, &$sucesso,  &self::$log));
 
+			}else{
+				self::$errors[] = JText::_('MOD_DROIDEFORMS_RESP_ERROR_DEFAULT');
+				$error = array(
+					'error'=>1,
+					'msn'=>self::$errors,
+					'log'=>self::$log
+				);
+
+				$dispatcher->trigger('onDroideformsPosSendError', array(&$module,  &$post, &$error,  &self::$log));
+
+				$return = json_encode($error);
 			}
 
 			return $return;

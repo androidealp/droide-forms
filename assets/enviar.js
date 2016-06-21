@@ -117,30 +117,20 @@ var sendDroideForms = {
 					sendDroideForms.next_erro.push(mensagem);
 				}
 			}
-
 		}
-
 		if(type=='f_size'){
 			//add condition
-
 			if(typeof obj[0].files[0] !== 'undefined'){
-
 				var file = obj[0].files[0].size;
-
 				kbps = (file/1024);
-
 				if(kbps>condition){
 					sendDroideForms.next_erro.push(mensagem);
 				}
-
 			};
-
 		}
-
 		if(type == 'f_custom'){
 				sendDroideForms.custom_validator(obj,mensagem);
 		}
-
 	},
 	custom_validator:function(obj,mensagem){
 		return sendDroideForms.logs('Create instance of the custom_validator.');
@@ -167,32 +157,7 @@ var sendDroideForms = {
 		sendDroideForms.fm_data.append('module','droideforms');
 		sendDroideForms.fm_data.append('id_ext',sendDroideForms.ob_form.data('extension'));
 		sendDroideForms.fm_data.append('format','json');
-
-
 		 return sendDroideForms.fm_data;
-
-
-		 		//data_file.append('forms',sendDroideForms.fm_data);
-
-
-
-		 		// sendDroideForms.ob_form.find('[type=file]').each(function(i,e){
-		 		// 			data_file.append('files'+i,j(e)[0].files[0]);
-		 		//  });
-		// var formdata   = sendDroideForms.ob_form.serializeArray();
-		// var data_file = new FormData();
-		//
-		// sendDroideForms.ob_form.find('[type=file]').each(function(i,e){
-		// 	data_file.append('files'+i,j(e)[0].files[0]);
-		// });
-		//
-		//  if(data_file){
-		//  		formdata.push({name:'files',value:data_file});
-		//  		formdata.push(data_file);
-		//  	}
-		//
-		// return formdata;
-
 	},
 	_sendajax:function(){
 
