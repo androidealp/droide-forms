@@ -17,9 +17,10 @@ droid-forms has been designed as a module to be easily manipulated, it you can:
 * Create select or create form layout
 
 droid-forms is designed to be extended, using triggers joomla you can handle the form submission process with the features:
-
+* onDroideformsInit - before set load all parans
 * onDroideformsBeforeLayout - before view layout form
 * onDroideformsAddvalidate - Add custom form validation  
+* onDroideformsAddrules - add custom rules, to new fields not sets in admin.
 * onDroideformsBeforePublisheLayout - Before send layout of the mensage
 * onDroideformsPosSend - Control after send e-mail
 * onDroideformsPosSendError - Control after error generate
@@ -50,5 +51,5 @@ The system currently has two layouts. Because the system uses the CSS defined in
 * YOOtheme containing html YOOtheme
 
 ### Documentation and wikis
-
-Coming soon ... 
+* [Plugin droide forms for capcha](https://github.com/androidealp/droide-forms/wiki/Plugin-droide-forms-for-capcha)
+ 
