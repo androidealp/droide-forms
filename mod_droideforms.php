@@ -50,7 +50,9 @@ $js = <<<JS
 var j = jQuery.noConflict();
 
 j(document).ready(function(){
-   sendDroideForms.init('#$id_form');
+	j('#$id_form button').on('click',function(){
+		 sendDroideForms.init('#$id_form');
+	});
 });
 
 JS;

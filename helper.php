@@ -65,20 +65,19 @@ class modDroideformsHelper
 	 */
 	private function getModule($id){
 		//decript id of the module
-		$id = self::Decrypt($id);
-		jimport('joomla.application.module.helper');
-		$module = JModuleHelper::getModule('droideforms');
+		$id = (int)self::Decrypt($id);
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select('*');
+		$query->from('#__modules');
+		$query->where('id = '.$id);
+		$db->setQuery($query);
+		$module = $db->loadObject();
 		$params = new JRegistry();
-		if(is_array($module)){
-			foreach ($module as $k => $mod) {
-				if($mod->id == $id){
-						$params->loadString($mod->params);
-				}
-			}
-		}else{
-			$params->loadString($module->params);
+		if($module){
+				$params->loadString($module->params);
 		}
-
+		
 		return $params;
 
 	}
