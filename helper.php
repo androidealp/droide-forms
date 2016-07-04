@@ -77,7 +77,7 @@ class modDroideformsHelper
 		if($module){
 				$params->loadString($module->params);
 		}
-		
+
 		return $params;
 
 	}
@@ -237,14 +237,14 @@ private function _uploadFile($files){
 
 		foreach ($files as $name => $file) {
 			$filename = JFile::makeSafe($file['name']);
-			$filename = preg_replace("/[^A-Za-z0-9-.-_]/i", "-", $filename);
-			$filename = rand(1,9999999).'-'.$filename;
-			$dest = JPATH_SITE.'/images/form_files/'.$filename;
+			$clear_file = preg_replace("/[^A-Za-z0-9-.-_]/i", "-", $filename);
+			$unique_file = rand(1,9999999).'-'.$clear_file;
+			$dest = JPATH_SITE.'/images/form_files/'.$unique_file;
 			if(!JFile::upload($file['tmp_name'], $dest)){
-				self::$errors[] = "Erro ao enviar o arquivo $filename";
+				self::$errors[] = "Erro ao enviar o arquivo $unique_file";
 
 			}else{
-				$url_destino = JURI::base().'images'.DS.'form_files'.DS.$filename;
+				$url_destino = JURI::base().'images/form_files/'.$unique_file;
 				$return[] = array(
 						'root'=>$url_destino,
 						'path'=>$dest,
