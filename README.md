@@ -1,4 +1,4 @@
-# droide-forms [downlod 3.5.x - v 1.0](https://github.com/androidealp/droide-forms/blob/master/droide-forms.zip?raw=true)
+# droide-forms [download - v 1.0 - j3.5.x](https://github.com/androidealp/droide-forms/blob/master/droide-forms.zip?raw=true)
 
 ### Intro
 You have imagined in a form system for joomla facing developers backend and frontend?
