@@ -317,8 +317,8 @@ private function _uploadFile($files){
 							$mail->addAttachment($file['path']);
 					}
 			}
-
-			if($mail->Send()){
+			$envio = $mail->Send();
+			if($envio == 1){
 				$sucesso = array(
 				'error'=>0,
 				'msn'=>$module->get('resp_sucesso',JText::_('MOD_DROIDEFORMS_RESP_SUCESSO_DEFAULT')),
@@ -330,7 +330,7 @@ private function _uploadFile($files){
 				$dispatcher->trigger('onDroideformsPosSend', array(&$module,  &$post, &$sucesso,  &self::$log));
 
 			}else{
-				self::$errors[] = JText::_('MOD_DROIDEFORMS_RESP_ERROR_DEFAULT');
+				self::$errors[] = JText::_('MOD_DROIDEFORMS_RESP_ERROR_DEFAULT').' '.$envio->__toString();
 				$error = array(
 					'error'=>1,
 					'msn'=>self::$errors,
