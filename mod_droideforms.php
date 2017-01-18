@@ -9,11 +9,12 @@
  */
 
 defined('_JEXEC') or die;
+$custom_vars = [];
 
 //instance plugin
 $dispatcher = JDispatcher::getInstance();
 JPluginHelper::importPlugin('droideforms');
-$dispatcher->trigger('onDroideformsInit');
+$dispatcher->trigger('onDroideformsInit',[&$custom_vars]);
 
 require_once __DIR__ . '/helper.php';
 
@@ -80,6 +81,6 @@ if ($params->def('prepare_content', 1))
 }
 
 
-$dispatcher->trigger('onDroideformsBeforeLayout', array(&$id_form, &$js, &$params, &$validacao));
+$dispatcher->trigger('onDroideformsBeforeLayout', array(&$id_form, &$js, &$params, &$validacao,&$custom_vars));
 
 require JModuleHelper::getLayoutPath('mod_droideforms', $params->get('layout', 'default'));

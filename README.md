@@ -1,4 +1,12 @@
-# droide-forms [download - v 1.0 - j3.5.x](https://github.com/androidealp/droide-forms/blob/master/droide-forms.zip?raw=true)
+# droide-forms
+
+### Versions
+
+| Version | Link |
+|---------|------|
+| v 1.0   | [download - v 1.0 - j3.5.x](https://github.com/androidealp/droide-forms/blob/master/droide-forms.zip?raw=true) |
+| v 1.1   | [download - v 1.1 - j3.5.x](https://github.com/androidealp/droide-forms/blob/master/droide-forms.v1.1.zip?raw=true) |
+
 
 ### Intro
 You have imagined in a form system for joomla facing developers backend and frontend?
@@ -11,7 +19,7 @@ Now this is possible with the Droid-forms, designed and developed for programmer
 droid-forms has been designed as a module to be easily manipulated, it you can:
 
 * Add preset or custom validations,
-* configure e-mail sending (the module uses the configuration.php data)
+* Configure e-mail sending (the module uses the configuration.php data)
 * Create sending layout
 * Create answer layout
 * Create select or create form layout
@@ -24,6 +32,8 @@ droid-forms is designed to be extended, using triggers joomla you can handle the
 * onDroideformsBeforePublisheLayout - Before send layout of the mensage
 * onDroideformsPosSend - Control after send e-mail
 * onDroideformsPosSendError - Control after error generate
+
+** Important to uses the var $custom_vars in your custom plugins for specific html view. This var This variable was added in version 1.1 **
 
 The javascript was developed as modules using designer partner to be easily manipulated, and thus modify dynamic structures layout.
 
@@ -50,6 +60,14 @@ The system currently has two layouts. Because the system uses the CSS defined in
 * Default containing html bootstrap
 * YOOtheme containing html YOOtheme
 
+### Plugins
+
+| Name                    | Link |
+|-------------------------|------------------------------------------------------------------|
+|droide-formsrecaptcha    | [Download](https://github.com/androidealp/droide-formsrecaptcha) |
+|droide-sendcart          | [Download](https://github.com/androidealp/droide-sendcart)       |
+|droide-captcha           | [Download](https://github.com/androidealp/droide-captcha)        |
+|droide-cart *(for ajax)* | [Download](https://github.com/androidealp/droide-cart)           |
+
 ### Documentation and wikis
 * [Plugin droide forms for capcha](https://github.com/androidealp/droide-forms/wiki/Plugin-droide-forms-for-capcha)
- 

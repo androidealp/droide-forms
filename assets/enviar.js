@@ -207,6 +207,13 @@ var sendDroideForms = {
 
 				}
 
+			},
+			error:function(xhr, ajaxOptions, thrownError)
+			{
+				console.log(xhr);
+				console.log(ajaxOptions);
+				console.log(thrownError);
+
 			}
 		});
 	}
