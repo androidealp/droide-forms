@@ -24,7 +24,7 @@ var sendDroideForms = {
 
 			sendDroideForms.ob_form = j(id_form);
 			sendDroideForms.id_form = id_form;
-
+			sendDroideForms.allEvents();
 			j(id_form).submit(function(event){
 				sendDroideForms.fm_data = new FormData(this);
 				event.preventDefault();
@@ -72,6 +72,114 @@ var sendDroideForms = {
 			return false;
 		});
 	},
+	allEvents:function()
+	{
+		// clear clone
+		j('[data-droideclear]').on('click',function(e){
+        e.preventDefault();
+        bt = j(this);
+
+        j(bt.data('droideclear')+' > *').remove();
+
+      });
+
+			// clone sys
+			j(document).on('click','[data-droideclone]',function(e){
+        e.preventDefault();
+        bt = j(this);
+        data = bt.data('droideclone');
+
+        getBox = j(data.clonar).clone();
+
+        grad = j("<div id='boxaleatorio' class='box-clone'>");
+        grad.append(getBox);
+        j(data.in).append(grad);
+
+      });
+
+			// turnonoff
+			j(document).on('change','[data-droideonoff]', function(e){
+       element =j(this);
+       dados = element.data('droideonoff');
+       valor = element.val();
+
+       if(typeof dados.equal != 'undefined')
+       {
+
+         if(dados.equal.opt == valor)
+         {
+           sendDroideForms.setTurn(dados.equal);
+         }
+
+       }
+
+       if(typeof dados.diferent != 'undefined')
+       {
+
+         if(dados.equal.opt != valor)
+         {
+           sendDroideForms.setTurn(dados.diferent);
+         }
+
+       }
+
+      });
+
+
+			//droide cep
+			j('[data-droidecep]').on('click',function(e){
+        e.preventDefault();
+        bt = j(this);
+        data = bt.data('buscacep');
+        fieldcep = j(data.elcep);
+        fields = data.fieldssearch;
+
+        if(typeof fieldcep != 'undefined' && fieldcep.val().length > 0)
+        {
+          fieldtratada = fieldcep.val().replace('-','');
+          fieldcep.attr('disabled',true);
+          j.each(fields, function(i, e){
+
+            j(e).attr('disabled',true);
+
+          });
+
+
+          j.get('https://viacep.com.br/ws/'+fieldtratada+'/json/',function(datajson){
+            fieldcep.attr('disabled',false);
+            objectmark = {};
+            j.each(fields, function(i, e){
+              objectmark[e] = i;
+              j(e).attr('disabled',false);
+
+            });
+
+            j.each(objectmark, function(i, e){
+              if(typeof datajson[e] != 'undefined' ){
+                  j(i).val(datajson[e]);
+              }
+            });
+
+          });
+
+        }
+
+     });
+
+	},
+	setTurn = function(dados){
+          var retorno = false;
+          if(typeof dados.on != 'undefined')
+          {
+            j(dados.on).show('slow');
+          }
+
+          if(typeof dados.off != 'undefined')
+          {
+            j(dados.off).hide('slow');
+          }
+
+  },
 	logs:function(msn){
 		if(typeof msn == "string"){
 			console.log('return: '+msn);

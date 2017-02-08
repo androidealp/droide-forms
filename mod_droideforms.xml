@@ -7,7 +7,7 @@
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<authorEmail>and4563@gmail.com</authorEmail>
 	<authorUrl>https://github.com/androidealp</authorUrl>
-	<version>1.1</version>
+	<version>1.2</version>
 	<description>MOD_DROIDEFORMS_DESC</description>
 	<customContent />
 	<files>
@@ -17,6 +17,7 @@
 		<folder>assets</folder>
 		<folder>language</folder>
 		<folder>tmpl</folder>
+		<folder>libs</folder>
 	</files>
 	<languages folder="language">
 		<language tag="pt-BR">pt-BR/pt-BR.mod_droideforms.sys.ini</language>

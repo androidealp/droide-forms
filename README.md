@@ -1,13 +1,5 @@
 # droide-forms
 
-### Versions
-
-| Version | Link |
-|---------|------|
-| v 1.0   | [download - v 1.0 - j3.5.x](https://github.com/androidealp/droide-forms/blob/master/droide-forms.zip?raw=true) |
-| v 1.1   | [download - v 1.1 - j3.5.x](https://github.com/androidealp/droide-forms/blob/master/droide-forms.v1.1.zip?raw=true) |
-
-
 ### Intro
 You have imagined in a form system for joomla facing developers backend and frontend?
 
@@ -60,6 +52,33 @@ The system currently has two layouts. Because the system uses the CSS defined in
 * Default containing html bootstrap
 * YOOtheme containing html YOOtheme
 
+
+### layout send
+
+Layout to send, check preview:
+
+```html
+<h3>Dados do Faturamento</h3>
+  <p data-elemento="tp_pessoa">Tipo de pessoa: {tp_pessoa}</p>
+
+  <div data-turnon="tp_pessoa==Pessoa Física">
+    <p data-elemento="cpf">CPF: {cpf}</p>
+  </div>
+
+  <div data-turnon="tp_pessoa==Pessoa Jurídica">
+        <p data-elemento="cnpj"><strong>CNPJ:</strong> {cnpj}</p>
+        <p data-elemento="ie">Inscrição Estadual: {ie}</p>
+        <p data-elemento="isento">Isento: {isento}</p>
+  </div>
+
+  <div data-boxforeach="boxclone"  style='background:#eee; padding:5px; margin-top:5px; margin:bottom:5px;'>
+        <p data-foreach="phone">Area: {phone}</p>
+        <p data-foreach="name">Material Proteger: {name}</p>
+  </div>
+
+
+```
+
 ### Plugins
 
 | Name                    | Link |
@@ -69,5 +88,14 @@ The system currently has two layouts. Because the system uses the CSS defined in
 |droide-captcha           | [Download](https://github.com/androidealp/droide-captcha)        |
 |droide-cart *(for ajax)* | [Download](https://github.com/androidealp/droide-cart)           |
 
+### Versions
+
+| Version | Link |
+|---------|------|
+| v 1.2   | [download - v 1.2 - j3.5.x](https://github.com/androidealp/droide-forms/archive/v1.2.zip) |
+| v 1.1   | [download - v 1.1 - j3.5.x](https://github.com/androidealp/droide-forms/archive/v1.1.zip) |
+| v 1.0   | [download - v 1.0 - j3.5.x](https://github.com/androidealp/droide-forms/archive/v1.0.zip) |
+
 ### Documentation and wikis
+* [Wiki for Droide forms 1.2 releases *(portuguese)*](https://github.com/androidealp/droide-forms/wiki/DroideForms-1.2-Funcionalidades)
 * [Plugin droide forms for capcha](https://github.com/androidealp/droide-forms/wiki/Plugin-droide-forms-for-capcha)

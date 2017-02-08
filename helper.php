@@ -11,6 +11,9 @@
 
 defined('_JEXEC') or die;
 
+//woking layout dinamic
+require_once __DIR__ . '/libs/DroideLayout.php';
+
 /**
  * modDroideformsHelper control send and control submit forms
  */
@@ -281,12 +284,18 @@ private function _uploadFile($files){
 					$frommail = $field;
 				}
 
-				if(strrpos($layout, '{'.$k.'}')){
-					$limpar= trim(strip_tags($k));
-					$regex	= '/{'.$k.'}/i';
-					$layout = preg_replace($regex, $field, $layout);
-				}
+				// if(strrpos($layout, '{'.$k.'}')){
+				// 	$limpar= trim(strip_tags($k));
+				// 	$regex	= '/{'.$k.'}/i';
+				// 	$layout = preg_replace($regex, $field, $layout);
+				// }
 			}
+
+			$dr_layout = new DroideLayout;
+			$dr_layout->post = $post;
+			$dr_layout->layout = $layout;
+			$dr_layout->init();
+			$layout = $dr_layout->printLayoutFinal();
 
 			$attachments_file = self::_uploadFile($files);
 
