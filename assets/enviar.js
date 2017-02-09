@@ -24,7 +24,6 @@ var sendDroideForms = {
 
 			sendDroideForms.ob_form = j(id_form);
 			sendDroideForms.id_form = id_form;
-			sendDroideForms.allEvents();
 			j(id_form).submit(function(event){
 				sendDroideForms.fm_data = new FormData(this);
 				event.preventDefault();
@@ -74,6 +73,9 @@ var sendDroideForms = {
 	},
 	allEvents:function()
 	{
+
+
+
 		// clear clone
 		j('[data-droideclear]').on('click',function(e){
         e.preventDefault();
@@ -97,8 +99,26 @@ var sendDroideForms = {
 
       });
 
+			j('[data-droideenable]').on('click',function(e){
+				var elemento = j(this);
+				var data = elemento.data('droideenable');
+
+				var elementsShow = (typeof data.show != 'undefined')?data.show.split(','):[];
+				var elementsHide = (typeof data.hide != 'undefined')?data.hide.split(','):[];
+
+				j.each(elementsShow,function(i, v) {
+					j(v).show('slow');
+				});
+
+				j.each(elementsHide,function(i, v) {
+					j(v).hide('slow');
+				});
+
+			});
+
 			// turnonoff
 			j(document).on('change','[data-droideonoff]', function(e){
+
        element =j(this);
        dados = element.data('droideonoff');
        valor = element.val();
@@ -130,7 +150,7 @@ var sendDroideForms = {
 			j('[data-droidecep]').on('click',function(e){
         e.preventDefault();
         bt = j(this);
-        data = bt.data('buscacep');
+        data = bt.data('droidecep');
         fieldcep = j(data.elcep);
         fields = data.fieldssearch;
 
@@ -167,7 +187,7 @@ var sendDroideForms = {
      });
 
 	},
-	setTurn = function(dados){
+	setTurn:function(dados){
           var retorno = false;
           if(typeof dados.on != 'undefined')
           {
