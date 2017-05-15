@@ -102,30 +102,33 @@ class modDroideformsHelper
 
 
 		$dispatcher->trigger('onDroideformsAddvalidate', array(&$post, &$validFiltros, &self::$errors, &self::$log));
+		// solução nycollas
+		if(self::__checkValidationPost($post,$validFiltros) == true){
+			//organizo os erros listados no adm e organizando em uma lista com o indice do field name
+			foreach ($validFiltros['field_name'] as $k => $fild_name) {
 
+				$validador = array(
+					'tipo'=>$validFiltros['tipo'][$k],
+					'condition'=>$validFiltros['field_condition'][$k],
+					'msn'=>$validFiltros['text_validador'][$k]
+				);
 
-		//organizo os erros listados no adm e organizando em uma lista com o indice do field name
-		foreach ($validFiltros['field_name'] as $k => $fild_name) {
+				foreach ($post as $index => $attr) {
+					if($fild_name == $index){
+						self::__validate($attr,$validador);
+					}
+				}
 
-			$validador = array(
-				'tipo'=>$validFiltros['tipo'][$k],
-				'condition'=>$validFiltros['field_condition'][$k],
-				'msn'=>$validFiltros['text_validador'][$k]
-			);
+				foreach ($files as $i => $att) {
 
-			foreach ($post as $index => $attr) {
-				if($fild_name == $index){
-					self::__validate($attr,$validador);
+					if($fild_name == $i){
+						self::__validate($att,$validador);
+					}
 				}
 			}
 
-			foreach ($files as $i => $att) {
+		} // fim do if __checkValidationPost
 
-				if($fild_name == $i){
-					self::__validate($att,$validador);
-				}
-			}
-		}
 
 		//Check errors
 
@@ -137,6 +140,49 @@ class modDroideformsHelper
 		return $return;
 
 	}
+
+	/**
+	 * Verifica se veido dados pelo post para tratamento,
+	 * @param  Array $post Lista de campos enviados via form
+	 * @param  array $filtro lista de dados vindos do filtro
+	 * @author Nycollas Email@anonimos.com
+	 * @return bool verdadeiro ou falso
+	 */
+	public function __checkValidationPost($post,$filtro)
+{
+
+	$check = false;
+	foreach ($filtro['field_name'] as $k => $fild_name) {
+
+		foreach(array_keys($post) as $nome){
+
+			$nome = str_replace(" ","", $nome);
+			$fild_name = str_replace(" ","", $fild_name);
+
+			if(strcasecmp($fild_name,$nome) == 0){
+				$check = true;
+				break;
+			}else{
+
+			}
+
+		}
+
+		if($check == true){
+			break;
+
+		}
+
+	}
+
+	if(!$check)
+	{
+		self::$errors[] = 'Dados incompletos favor verificar.';
+	}
+
+	return $check;
+
+}
 
   /**
    * Validate the form posts
