@@ -318,6 +318,7 @@ private function _uploadFile($files){
 			$return = '';
 			$frommail = "";
 			$fromname = "";
+			$returnTrigger = [];
 			$layout = $module->get('layout_envio');
 
 			foreach ($post as $k => $field) {
@@ -359,7 +360,7 @@ private function _uploadFile($files){
 
 			$dispatcher = JDispatcher::getInstance();
 			JPluginHelper::importPlugin('droideforms');
-			$dispatcher->trigger('onDroideformsBeforePublisheLayout', array(&$module, &$layout, &$post, &self::$log));
+			$dispatcher->trigger('onDroideformsBeforePublisheLayout', array(&$module, &$layout, &$post, &self::$log,&$returnTrigger));
 			$mail = JFactory::getMailer();
 			$mail->isHTML(true);
 			$mail->Encoding = 'base64';
@@ -395,6 +396,8 @@ private function _uploadFile($files){
 				$dispatcher->trigger('onDroideformsPosSendError', array(&$module,  &$post, &$error,  &self::$log));
 
 				$return = json_encode($error);
+
+				$dispatcher->trigger('onDroideformsBeforeReturn', array(&$module,  &$return, &$returnTrigger,  &self::$log));
 			}
 
 			return $return;

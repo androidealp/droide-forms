@@ -1,4 +1,4 @@
-# droide-forms
+# droideforms New Version 1.2.3
 
 ### Intro
 You have imagined in a form system for joomla facing developers backend and frontend?
@@ -92,11 +92,17 @@ Layout to send, check preview:
 
 | Version | Link |
 |---------|------|
+| v 1.2.3   | [download - v 1.2.3 - j3.8.x](https://github.com/androidealp/droide-forms/archive/v1.2.3.zip) |
 | v 1.2.2   | [download - v 1.2.2 - j3.5.x](https://github.com/androidealp/droide-forms/archive/v1.2.2.zip) |
 | v 1.2.1   | [download - v 1.2.1 - j3.5.x](https://github.com/androidealp/droide-forms/archive/v1.2.1.zip) |
 | v 1.1   | [download - v 1.1 - j3.5.x](https://github.com/androidealp/droide-forms/archive/v1.1.zip) |
 | v 1.0   | [download - v 1.0 - j3.5.x](https://github.com/androidealp/droide-forms/archive/v1.0.zip) |
 
+## issues solveds for 1.2.3
+ * Added variable &$returnTrigger in method _sendEmail which walks between triggers onDroideformsBeforePublisheLayout and onDroideformsBeforeReturn
+ * Attachment event error for multiple clicks on submit resolved
+ * Added validator method for cpf, cnpj, data
+
 ### Documentation and wikis
-* [Wiki for Droide forms 1.2 releases *(portuguese)*](https://github.com/androidealp/droide-forms/wiki/DroideForms-1.2-Funcionalidades)
+* [Wiki for Droide forms 1.2.x releases *(portuguese)*](https://github.com/androidealp/droide-forms/wiki/DroideForms-1.2-Funcionalidades)
 * [Plugin droide forms for capcha](https://github.com/androidealp/droide-forms/wiki/Plugin-droide-forms-for-capcha)
