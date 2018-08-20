@@ -98,6 +98,12 @@ Layout to send, check preview:
 | v 1.1   | [download - v 1.1 - j3.5.x](https://github.com/androidealp/droide-forms/archive/v1.1.zip) |
 | v 1.0   | [download - v 1.0 - j3.5.x](https://github.com/androidealp/droide-forms/archive/v1.0.zip) |
 
+
+## issues solveds for 1.2.4
+ * Add Trigger onDroideformsbeforeInitRemententeMensagem
+ * Added feature for recipient to receive custom layout email
+ * more fields in the module administrator
+
 ## issues solveds for 1.2.3
  * Added variable &$returnTrigger in method _sendEmail which walks between triggers onDroideformsBeforePublisheLayout and onDroideformsBeforeReturn
  * Attachment event error for multiple clicks on submit resolved

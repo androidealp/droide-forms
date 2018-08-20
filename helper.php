@@ -320,6 +320,8 @@ private function _uploadFile($files){
 			$fromname = "";
 			$returnTrigger = [];
 			$layout = $module->get('layout_envio');
+			$dispatcher = JDispatcher::getInstance();
+			JPluginHelper::importPlugin('droideforms');
 
 			foreach ($post as $k => $field) {
 
@@ -358,9 +360,21 @@ private function _uploadFile($files){
 				$emailTO = $module->get('para');
 			}
 
-			$dispatcher = JDispatcher::getInstance();
-			JPluginHelper::importPlugin('droideforms');
+			
 			$dispatcher->trigger('onDroideformsBeforePublisheLayout', array(&$module, &$layout, &$post, &self::$log,&$returnTrigger));
+
+			if($module->get('remetente_mensagem',0))
+			{
+				$dr_layout->layout = $remetente_msg;
+				$dr_layout->post['mensagem_retorno'] = $module->get('resp_sucesso',JText::_('MOD_DROIDEFORMS_RESP_SUCESSO_DEFAULT'));
+
+				$dispatcher->trigger('onDroideformsbeforeInitRemententeMensagem', array(&$module, &$dr_layout, &$returnTrigger, &$post, &self::$log));
+
+				$dr_layout->init();
+
+				$remetente_msg = $dr_layout->printLayoutFinal();	
+			}
+
 			$mail = JFactory::getMailer();
 			$mail->isHTML(true);
 			$mail->Encoding = 'base64';
@@ -375,6 +389,13 @@ private function _uploadFile($files){
 			}
 			$envio = $mail->Send();
 			if($envio == 1){
+
+				// sendMail($from, $fromname, $recipient, $subject, $body, $htmlmode=0, $cc=null, $bcc=null, $attachment=null, $replyto=null, $replytoname=null )
+				if($module->get('remetente_mensagem',0))
+				{
+					JFactory::getMailer()->sendMail($config->get( 'mailfrom' ), $config->get('fromname') ,$frommail, $module->get('assunto'), $remetente_msg,true);	
+				}
+
 				$sucesso = array(
 				'error'=>0,
 				'msn'=>$module->get('resp_sucesso',JText::_('MOD_DROIDEFORMS_RESP_SUCESSO_DEFAULT')),

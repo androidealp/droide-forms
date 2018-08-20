@@ -73,6 +73,16 @@
 					<option value="0">JNO</option>
 				</field>
 				<field
+					name="remetente_mensagem"
+					type="radio"
+					class="btn-group btn-group-yesno"
+					label="MOD_DROIDEFORMS_LABEL_REMETENT_COPY"
+					description="MOD_DROIDEFORMS_DESC_REMETENT_COPY"
+					default="0">
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>
+				<field
 						name = "id_form"
 					    type = "text"
 					    default = "droide_formsid"
@@ -157,6 +167,14 @@
 					type="editor"
 					label="MOD_DROIDEFORMS_LAYOUT_ENVIO_LABEL"
 					description="MOD_DROIDEFORMS_LAYOUT_ENVIO_DESC"
+					width="900"
+					filter="safehtml" />
+				
+				<field
+					name="remetente_msg"
+					type="editor"
+					label="MOD_DROIDEFORMS_LAYOUT_REMETENT_COPY"
+					description="MOD_DROIDEFORMS_LAYOUT_DESC_COPY"
 					width="900"
 					filter="safehtml" />
 
