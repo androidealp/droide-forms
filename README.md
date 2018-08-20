@@ -1,4 +1,4 @@
-# droideforms New Version 1.2.3
+# droideforms New Version 1.2.4
 
 ### Intro
 You have imagined in a form system for joomla facing developers backend and frontend?
@@ -19,6 +19,7 @@ droid-forms has been designed as a module to be easily manipulated, it you can:
 droid-forms is designed to be extended, using triggers joomla you can handle the form submission process with the features:
 * onDroideformsInit - before set load all parans
 * onDroideformsBeforeLayout - before view layout form
+* onDroideformsbeforeInitRemententeMensagem - before init recipient treatment
 * onDroideformsAddvalidate - Add custom form validation  
 * onDroideformsAddrules - add custom rules, to new fields not sets in admin.
 * onDroideformsBeforePublisheLayout - Before send layout of the mensage
