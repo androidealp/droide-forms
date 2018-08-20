@@ -93,6 +93,7 @@ Layout to send, check preview:
 
 | Version | Link |
 |---------|------|
+| v 1.2.4   | [download - v 1.2.4 - j3.8.x](https://github.com/androidealp/droide-forms/archive/v1.2.4.2.zip) |
 | v 1.2.3   | [download - v 1.2.3 - j3.8.x](https://github.com/androidealp/droide-forms/archive/v1.2.3.zip) |
 | v 1.2.2   | [download - v 1.2.2 - j3.5.x](https://github.com/androidealp/droide-forms/archive/v1.2.2.zip) |
 | v 1.2.1   | [download - v 1.2.1 - j3.5.x](https://github.com/androidealp/droide-forms/archive/v1.2.1.zip) |
