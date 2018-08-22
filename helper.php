@@ -360,6 +360,11 @@ private function _uploadFile($files){
 				$emailTO = $module->get('para');
 			}
 
+			if(strpos($emailTO, ';') !== false)
+			{
+				$emailTO = explode(';',$emailTO);
+			}
+
 			
 			$dispatcher->trigger('onDroideformsBeforePublisheLayout', array(&$module, &$layout, &$post, &self::$log,&$returnTrigger));
 
