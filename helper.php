@@ -409,7 +409,7 @@ private function _uploadFile($files){
 
 				$return = json_encode($sucesso);
 
-				$dispatcher->trigger('onDroideformsPosSend', array(&$module,  &$post, &$sucesso,  &self::$log));
+				$dispatcher->trigger('onDroideformsPosSend', array(&$module,  &$post, &$sucesso,  &self::$log, &$returnTrigger));
 
 			}else{
 				self::$errors[] = JText::_('MOD_DROIDEFORMS_RESP_ERROR_DEFAULT').' '.$envio->__toString();
@@ -419,7 +419,7 @@ private function _uploadFile($files){
 					'log'=>self::$log
 				);
 
-				$dispatcher->trigger('onDroideformsPosSendError', array(&$module,  &$post, &$error,  &self::$log));
+				$dispatcher->trigger('onDroideformsPosSendError', array(&$module,  &$post, &$error,  &self::$log, &$returnTrigger));
 
 				$return = json_encode($error);
 

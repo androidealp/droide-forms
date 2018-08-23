@@ -93,7 +93,7 @@ Layout to send, check preview:
 
 | Version | Link |
 |---------|------|
-| v 1.2.5   | [download - v 1.2.5 - j3.8.x](https://github.com/androidealp/droide-forms/archive/v1.2.5.zip) |
+| v 1.2.5   | [download - v 1.2.5 - j3.8.x](https://github.com/androidealp/droide-forms/archive/v1.2.5.1.zip) |
 | v 1.2.4   | [download - v 1.2.4 - j3.8.x](https://github.com/androidealp/droide-forms/archive/v1.2.4.2.zip) |
 | v 1.2.3   | [download - v 1.2.3 - j3.8.x](https://github.com/androidealp/droide-forms/archive/v1.2.3.zip) |
 | v 1.2.2   | [download - v 1.2.2 - j3.5.x](https://github.com/androidealp/droide-forms/archive/v1.2.2.zip) |
@@ -104,6 +104,7 @@ Layout to send, check preview:
 
 ## issues solveds for 1.2.5
  * Add multiples recipients email in to field admin
+ * Add attributes in triggers onDroideformsPosSend, onDroideformsPosSendError
 
 ## issues solveds for 1.2.4
  * Add Trigger onDroideformsbeforeInitRemententeMensagem
