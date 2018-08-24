@@ -88,6 +88,7 @@ Layout to send, check preview:
 |droide-sendcart          | [Download](https://github.com/androidealp/droide-sendcart)       |
 |droide-captcha           | [Download](https://github.com/androidealp/droide-captcha)        |
 |droide-cart *(for ajax)* | [Download](https://github.com/androidealp/droide-cart)           |
+|droide-forms_savedb      | [Download](https://github.com/androidealp/droide-forms_savedb)   |
 
 ### Versions
 
