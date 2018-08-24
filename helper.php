@@ -79,6 +79,8 @@ class modDroideformsHelper
 		$params = new JRegistry();
 		if($module){
 				$params->loadString($module->params);
+				$params->id = $id;
+				$params->title = $module->title;
 		}
 
 		return $params;
@@ -407,9 +409,11 @@ private function _uploadFile($files){
 				'log'=>self::$log
 				);
 
+				$dispatcher->trigger('onDroideformsPosSend', array(&$module,  &$post, &$sucesso,  &self::$log, &$returnTrigger));
+
 				$return = json_encode($sucesso);
 
-				$dispatcher->trigger('onDroideformsPosSend', array(&$module,  &$post, &$sucesso,  &self::$log, &$returnTrigger));
+				
 
 			}else{
 				self::$errors[] = JText::_('MOD_DROIDEFORMS_RESP_ERROR_DEFAULT').' '.$envio->__toString();
@@ -422,9 +426,9 @@ private function _uploadFile($files){
 				$dispatcher->trigger('onDroideformsPosSendError', array(&$module,  &$post, &$error,  &self::$log, &$returnTrigger));
 
 				$return = json_encode($error);
-
-				$dispatcher->trigger('onDroideformsBeforeReturn', array(&$module,  &$return, &$returnTrigger,  &self::$log));
 			}
+
+			$dispatcher->trigger('onDroideformsBeforeReturn', array(&$module,  &$return, &$returnTrigger,  &self::$log));
 
 			return $return;
 	}
