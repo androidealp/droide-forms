@@ -440,15 +440,27 @@ private function _uploadFile($files){
  */
 public function Encrypt($data)
 {
-	$password = self::$pass_cript_decript;
-    $salt = substr(md5(mt_rand(), true), 8);
+	// $password = self::$pass_cript_decript;
+    // $salt = substr(md5(mt_rand(), true), 8);
 
-    $key = md5($password . $salt, true);
-    $iv  = md5($key . $password . $salt, true);
+    // $key = md5($password . $salt, true);
+    // $iv  = md5($key . $password . $salt, true);
 
-    $ct = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $key, $data, MCRYPT_MODE_CBC, $iv);
+    // $ct = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $key, $data, MCRYPT_MODE_CBC, $iv);
 
-    return base64_encode('Salted__' . $salt . $ct);
+	// return base64_encode('Salted__' . $salt . $ct);
+	
+	$first_key = base64_decode(self::$pass_cript_decript);
+	$second_key = base64_decode(self::$pass_cript_decript);
+	$method = "aes-256-cbc"; 
+
+	$iv_length = openssl_cipher_iv_length($method);
+	$iv = openssl_random_pseudo_bytes($iv_length);
+	$first_encrypted = openssl_encrypt($data,$method,$first_key, OPENSSL_RAW_DATA ,$iv);
+	$second_encrypted = hash_hmac('sha3-512', $first_encrypted, $second_key, TRUE);
+	$output = base64_encode($iv.$second_encrypted.$first_encrypted);   
+	
+	return $output;  
 }
 
 /**
@@ -456,20 +468,40 @@ public function Encrypt($data)
  * @param int $data id the module
  * @return string decriptada
  */
-private function Decrypt($data)
+private function Decrypt($input)
 {
-		$password = self::$pass_cript_decript;
+	// 	$password = self::$pass_cript_decript;
 
-    $data = base64_decode($data);
-    $salt = substr($data, 8, 8);
-    $ct   = substr($data, 16);
+    // $data = base64_decode($data);
+    // $salt = substr($data, 8, 8);
+    // $ct   = substr($data, 16);
 
-    $key = md5($password . $salt, true);
-    $iv  = md5($key . $password . $salt, true);
+    // $key = md5($password . $salt, true);
+    // $iv  = md5($key . $password . $salt, true);
 
-    $pt = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $key, $ct, MCRYPT_MODE_CBC, $iv);
+    // $pt = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $key, $ct, MCRYPT_MODE_CBC, $iv);
 
-    return $pt;
+	// return $pt;
+	
+	$first_key = base64_decode(self::$pass_cript_decript);
+	$second_key = base64_decode(self::$pass_cript_decript); 
+	$mix = base64_decode($input);
+	$method = "aes-256-cbc"; 
+	$iv_length = openssl_cipher_iv_length($method);
+
+	$iv = substr($mix,0,$iv_length);
+	$second_encrypted = substr($mix,$iv_length,64);
+	$first_encrypted = substr($mix,$iv_length+64);
+	
+	$data = openssl_decrypt($first_encrypted,$method,$first_key,OPENSSL_RAW_DATA,$iv);
+	$second_encrypted_new = hash_hmac('sha3-512', $first_encrypted, $second_key, TRUE);
+
+	if (hash_equals($second_encrypted,$second_encrypted_new))
+	{
+		return $data;
+	}
+
+	return false;
 }
 
 }

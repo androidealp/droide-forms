@@ -94,7 +94,7 @@ Layout to send, check preview:
 
 | Version | Link |
 |---------|------|
-| v 1.2.5   | [download - v 1.2.5 - j3.8.x](https://github.com/androidealp/droide-forms/archive/v1.2.5.2.zip) |
+| v 1.2.5   | [download - v 1.2.5 - j3.8.x](https://github.com/androidealp/droide-forms/archive/v1.2.5.3.zip) |
 | v 1.2.4   | [download - v 1.2.4 - j3.8.x](https://github.com/androidealp/droide-forms/archive/v1.2.4.2.zip) |
 | v 1.2.3   | [download - v 1.2.3 - j3.8.x](https://github.com/androidealp/droide-forms/archive/v1.2.3.zip) |
 | v 1.2.2   | [download - v 1.2.2 - j3.5.x](https://github.com/androidealp/droide-forms/archive/v1.2.2.zip) |
@@ -107,6 +107,7 @@ Layout to send, check preview:
  * Add multiples recipients email in to field admin
  * Add attributes in triggers onDroideformsPosSend, onDroideformsPosSendError
  * improved loading of module object, new fields $ module-> id, $ module-> title
+ * Removed mcrypt of the system, updated to openssl_encrypt for php7.2 compatibility
 
 ## issues solveds for 1.2.4
  * Add Trigger onDroideformsbeforeInitRemententeMensagem

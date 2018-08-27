@@ -17,22 +17,22 @@ defined('_JEXEC') or die;
 
 <form id="<?=$params->get('id_form');?>" class="form" method="POST" action="" data-extension="<?=$idmodule; ?>" data-droidevalid='<?=($validacao)?$validacao:''; ?>' >
 
-<div>
-	<input type="text" name="nome" />
-</div>
+	<div>
+		<input type="text" name="nome" placeholder="Digite o seu nome" />
+	</div>
 
-<div>
-	<input type="text" name="telefone" />
-</div>
+	<div>
+		<input type="text" name="telefone" placeholder="Digite o seu telefone"/>
+	</div>
 
-<div>
-	<input type="text" name="assunto" />
-</div>
+	<div>
+		<input type="text" name="assunto" placeholder="Digite o assunto"/>
+	</div>
 
-<div>
-	<textarea name="mensagem"></textarea>
-</div>
+	<div>
+		<textarea name="mensagem" placeholder="Digite o seu nome"></textarea>
+	</div>
 
-<button class="uk-button uk-button-large uk-margin-large-top">Enviar</button>
+	<button class="uk-button uk-button-large uk-margin-large-top">Enviar</button>
 
 </form>
