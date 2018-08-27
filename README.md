@@ -80,6 +80,10 @@ Layout to send, check preview:
 
 ```
 
+### Demos
+
+![Visual studio code](assets/modulodroide.gif)
+
 ### Plugins
 
 | Name                    | Link |
