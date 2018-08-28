@@ -321,6 +321,7 @@ private function _uploadFile($files){
 			$frommail = "";
 			$fromname = "";
 			$returnTrigger = [];
+			$remetente_msg = "";
 			$layout = $module->get('layout_envio');
 			$dispatcher = JDispatcher::getInstance();
 			JPluginHelper::importPlugin('droideforms');
@@ -372,7 +373,7 @@ private function _uploadFile($files){
 
 			if($module->get('remetente_mensagem',0))
 			{
-				$dr_layout->layout = $remetente_msg;
+				$dr_layout->layout = $module->get('remetente_msg','');
 				$dr_layout->post['mensagem_retorno'] = $module->get('resp_sucesso',JText::_('MOD_DROIDEFORMS_RESP_SUCESSO_DEFAULT'));
 
 				$dispatcher->trigger('onDroideformsbeforeInitRemententeMensagem', array(&$module, &$dr_layout, &$returnTrigger, &$post, &self::$log));
