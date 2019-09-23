@@ -18,7 +18,7 @@ public $post = [
    'ie'=>'Next4 LTDA',
    'isento'=>'Sim',
    'dd_certificado'=>[
-     'area_informeada'=>[
+     'area_informada'=>[
        '455x100','15x15','50x32'
      ],
      'material-a-proteger'=>[

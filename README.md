@@ -1,4 +1,4 @@
-# droideforms New Version 1.2.6
+# droideforms New Version 1.2.7
 
 ### Intro
 You have imagined in a form system for joomla facing developers backend and frontend?
@@ -98,6 +98,7 @@ Layout to send, check preview:
 
 | Version | Link |
 |---------|------|
+| v 1.2.7   | [download - v 1.2.7 - j3.8.x](https://github.com/androidealp/droide-forms/archive/v1.2.7.zip) |
 | v 1.2.6   | [download - v 1.2.6 - j3.8.x](https://github.com/androidealp/droide-forms/archive/v1.2.6.zip) |
 | v 1.2.5   | [download - v 1.2.5 - j3.8.x](https://github.com/androidealp/droide-forms/archive/v1.2.5.3.zip) |
 | v 1.2.4   | [download - v 1.2.4 - j3.8.x](https://github.com/androidealp/droide-forms/archive/v1.2.4.2.zip) |
@@ -107,6 +108,9 @@ Layout to send, check preview:
 | v 1.1   | [download - v 1.1 - j3.5.x](https://github.com/androidealp/droide-forms/archive/v1.1.zip) |
 | v 1.0   | [download - v 1.0 - j3.5.x](https://github.com/androidealp/droide-forms/archive/v1.0.zip) |
 
+## issues solveds for 1.2.7
+ * turn on turn off not clear field
+ * minify css and javascript
 
 ## issues solveds for 1.2.5
  * error Variables in helper.php

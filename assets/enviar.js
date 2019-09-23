@@ -107,10 +107,31 @@ var sendDroideForms = {
 				var elementsHide = (typeof data.hide != 'undefined')?data.hide.split(','):[];
 
 				j.each(elementsShow,function(i, v) {
+					if(!j(v).is('input'))
+					{
+						j(v).find('input[type="radio"]').prop('checked',false);
+						j(v).find('input[type="checkbox"]').prop('checked',false);
+						j(v).find('input[type="text"]').val('');
+					}else{
+						j(v).prop('checked',false);
+						j(v).prop('checked',false);
+						j(v).val('');
+					}
+					
 					j(v).show('slow');
 				});
 
 				j.each(elementsHide,function(i, v) {
+					if(!j(v).is('input'))
+					{
+						j(v).find('input[type="radio"]').prop('checked',false);
+						j(v).find('input[type="checkbox"]').prop('checked',false);
+						j(v).find('input[type="text"]').val('');
+					}else{
+						j(v).prop('checked',false);
+						j(v).prop('checked',false);
+						j(v).val('');
+					}
 					j(v).hide('slow');
 				});
 
@@ -191,11 +212,31 @@ var sendDroideForms = {
           var retorno = false;
           if(typeof dados.on != 'undefined')
           {
+			if(!j(dados.on).is('input'))
+					{
+						j(dados.on).find('input[type="radio"]').prop('checked',false);
+						j(dados.on).find('input[type="checkbox"]').prop('checked',false);
+						j(dados.on).find('input[type="text"]').val('');
+					}else{
+						j(dados.on).prop('checked',false);
+						j(dados.on).prop('checked',false);
+						j(dados.on).val('');
+					}
             j(dados.on).show('slow');
           }
 
           if(typeof dados.off != 'undefined')
           {
+			if(!j(dados.on).is('input'))
+			{
+				j(dados.on).find('input[type="radio"]').prop('checked',false);
+				j(dados.on).find('input[type="checkbox"]').prop('checked',false);
+				j(dados.on).find('input[type="text"]').val('');
+			}else{
+				j(dados.on).prop('checked',false);
+				j(dados.on).prop('checked',false);
+				j(dados.on).val('');
+			}
             j(dados.off).hide('slow');
           }
 
